@@ -1,16 +1,18 @@
 import { NextPage } from "next"
 import { useEffect, useState } from "react"
-import styles from "../styles/Game.module.css"
+import { Card, ICardProps } from "@components"
+import styles from "@styles/Game.module.css"
+
 let socket: WebSocket;
 
 type Card = {
-    Number: number;
-    Color: string;
+    Number: ICardProps["number"];
+    Color: ICardProps["color"];
 }
 
 const Game: NextPage = () => {
 
-    const [deck, setDeck] = useState<Card[]>([])
+    const [deck, setDeck] = useState<Card[]>()
 
     useEffect(() => {
         socketInitializer()
@@ -24,26 +26,26 @@ const Game: NextPage = () => {
         socket.addEventListener("open", () => {
             console.log("Socket Connected");
         })
-        socket.addEventListener("message", (ev) => {
-            try {
-                const serverData = JSON.parse(ev.data)
-                switch(serverData.event) {
-                    case "GET_DECK":
-                        const {data} = serverData
-                        setDeck(JSON.parse(data))
-                        break;
-                    default:
-                        console.log("Event not handled");
-                        
-                }
-            } catch(e) {
-                console.log(ev);
-            }
-        })
+        socket.addEventListener("message", onSocketMessage)
         socket.addEventListener("close", () => {
             console.log("Socket Closed");
-            
         })
+    }
+
+    const onSocketMessage = (ev: MessageEvent) => {
+        try {
+            const serverData = JSON.parse(ev.data)
+            switch(serverData.event) {
+                case "GET_DECK":
+                    const {data} = serverData
+                    setDeck(JSON.parse(data) as Card[])
+                    break;
+                default:
+                    console.log("Event not handled");
+            }
+        } catch(e) {
+            console.log(ev);
+        }
     }
 
     const clickHandler = () => {
@@ -60,20 +62,10 @@ const Game: NextPage = () => {
             <button onClick={testHandler}>Test Conns</button>
             <div className={styles.deck}>
                 {deck && deck.map((card, i) => 
-                    <div 
-                        className={styles.card} 
-                        style={{color: card.Color}} 
-                        key={i}>
-                        <div className={styles.inner}>
-                            <div
-                                className={`${styles.cardDecor} ${styles.upperLeft}`} 
-                                style={{backgroundColor: card.Color}}><p>{card.Number}</p></div>
-                            {card.Number}
-                            <div
-                                className={`${styles.cardDecor} ${styles.bottomRight}`} 
-                                style={{backgroundColor: card.Color}}><p>{card.Number}</p></div>
-                        </div>
-                    </div>
+                    <Card
+                        key={i} 
+                        number={card.Number} 
+                        color={card.Color} />
                 )}
             </div>
         </div>
