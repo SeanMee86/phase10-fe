@@ -1,0 +1,64 @@
+.deck {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-gap: 3rem;
+    padding: 3rem;
+}
+
+.card {
+    width: 220px;
+    height: 330px;
+    padding: 8px;
+    border: 1px solid black;
+    border-radius: 4px;
+}
+
+.cardDecor {
+    color: white;
+    height: 200px;
+    width: 200px;
+    position: absolute;
+    border-radius: 50%;
+}
+
+.upperLeft {
+    top: 0;
+    left: 0;
+    transform: translate(-60%, -60%)
+}
+
+.bottomRight {
+    bottom: 0;
+    right: 0;
+    transform: translate(60%, 60%)
+
+}
+
+.upperLeft p {
+    bottom: 8px;
+    right: 34px
+}
+
+.bottomRight p {
+    top: 8px;
+    left: 34px;
+}
+
+.cardDecor p {
+    font-size: 1.8rem;
+    position: absolute;
+    min-width: 32px;
+    text-align: center;
+}
+
+.card .inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    font-weight: 600;
+    height: 100%;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
