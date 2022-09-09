@@ -16,29 +16,26 @@ const Game: NextPage = () => {
 
     useEffect(() => {
         socketInitializer()
-        return () => {
-            socket.close()
-        }
     }, [])
 
     const socketInitializer = () => {
         socket = new WebSocket("ws://localhost:3001")
-        socket.addEventListener("open", () => {
-            console.log("Socket Connected");
-        })
         socket.addEventListener("message", onSocketMessage)
-        socket.addEventListener("close", () => {
-            console.log("Socket Closed");
-        })
     }
 
     const onSocketMessage = (ev: MessageEvent) => {
         try {
             const serverData = JSON.parse(ev.data)
+            const {data} = serverData
             switch(serverData.event) {
                 case "GET_DECK":
-                    const {data} = serverData
                     setDeck(JSON.parse(data) as Card[])
+                    break;
+                case "GAME_CREATED":
+                    console.log(JSON.parse(data))
+                    break;
+                case "GAME_JOINED":
+                    console.log(data);
                     break;
                 default:
                     console.log("Event not handled");
@@ -52,14 +49,19 @@ const Game: NextPage = () => {
         socket?.send(JSON.stringify({event: "GET_DECK"}))
     }
 
-    const testHandler = () => {
-        socket?.send(JSON.stringify({event: "TEST_CONN"}))
+    const createHandler = () => {
+        socket?.send(JSON.stringify({event: "CREATE_GAME", data: JSON.stringify({name: "Sean"})}))
+    }
+
+    const joinHandler = () => {
+        socket?.send(JSON.stringify({event: "JOIN_GAME", data: JSON.stringify({name: "Ed", gameId: "07dcea05-aada-4a9c-a5d0-36cd0d9cd923"})}))
     }
 
     return (
         <div>
             <button onClick={clickHandler}>Get Deck</button>
-            <button onClick={testHandler}>Test Conns</button>
+            <button onClick={createHandler}>Create Game</button>
+            <button onClick={joinHandler}>Join Game</button>
             <div className={styles.deck}>
                 {deck && deck.map((card, i) => 
                     <Card
