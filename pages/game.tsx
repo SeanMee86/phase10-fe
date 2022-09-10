@@ -17,7 +17,8 @@ const Game: NextPage = () => {
 
     const router = useRouter()
     const [deck, setDeck] = useState<Card[]>()
-    const {createGame, playerName, gamePassword} = useContext(GameContext)
+    const [players, setPlayers] = useState<string[]>([])
+    const {createGame, playerName, gamePassword, setGamePassword} = useContext(GameContext)
 
     useEffect(() => {
         if(!playerName) {
@@ -26,6 +27,7 @@ const Game: NextPage = () => {
         }
         socketInitializer()
         const socketInterval = setInterval(() => {
+            
             if(socket.readyState === 1 && !socketJoined) {
                 createGame ? createHandler() : joinHandler()
                 socketJoined = true
@@ -48,10 +50,12 @@ const Game: NextPage = () => {
                     setDeck(JSON.parse(data) as Card[])
                     break;
                 case "GAME_CREATED":
-                    console.log(JSON.parse(data))
+                    const gameData = JSON.parse(data)
+                    setGamePassword!(gameData.Id)
                     break;
                 case "GAME_JOINED":
-                    console.log(data);
+                    const playerNames = JSON.parse(data);
+                    setPlayers([...playerNames])
                     break;
                 default:
                     console.log("Event not handled");
@@ -82,6 +86,7 @@ const Game: NextPage = () => {
 
     return (
         <div>
+            {createGame && <p>Game Password: {gamePassword}</p>}
             <button onClick={clickHandler}>Get Deck</button>
             <div className={styles.deck}>
                 {deck && deck.map((card, i) => 
@@ -91,6 +96,11 @@ const Game: NextPage = () => {
                         color={card.Color} />
                 )}
             </div>
+            <div>{players.map(player => {
+                return (
+                    <p key={player}>{player}</p>
+                )
+            })}</div>
         </div>
     )
 }
