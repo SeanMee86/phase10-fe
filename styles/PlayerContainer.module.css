@@ -1,0 +1,12 @@
+.innerContainer {
+    border-bottom: 1px solid black;
+}
+
+.innerContainer:last-child {
+    border-bottom: none;
+}
+
+.outerContainer {
+    border-right: 1px solid black;
+    padding: 40px 20px;
+}
