@@ -100,7 +100,7 @@ const Game: NextPage = () => {
         <Layout>
             {createGame && <p>Game Password: {gamePassword}</p>}
             <button onClick={clickHandler}>Get Deck</button>
-            <div style={{display: "grid", gridTemplateColumns: "repeat(1, 4fr)"}}>
+            <div style={{display: "grid", gridTemplateColumns: "repeat(4, 1fr)"}}>
                 <div>
                     <PlayerContainer players={players}/>
                 </div>
