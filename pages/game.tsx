@@ -1,9 +1,12 @@
 import { NextPage } from "next"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { Card, ICardProps } from "@components"
 import styles from "@styles/Game.module.css"
+import { GameContext } from "./game.context";
+import { useRouter } from "next/router";
 
 let socket: WebSocket;
+let socketJoined = false;
 
 type Card = {
     Number: ICardProps["number"];
@@ -12,10 +15,23 @@ type Card = {
 
 const Game: NextPage = () => {
 
+    const router = useRouter()
     const [deck, setDeck] = useState<Card[]>()
+    const {createGame, playerName, gamePassword} = useContext(GameContext)
 
     useEffect(() => {
+        if(!playerName) {
+            router.push("/")
+            return
+        }
         socketInitializer()
+        const socketInterval = setInterval(() => {
+            if(socket.readyState === 1 && !socketJoined) {
+                createGame ? createHandler() : joinHandler()
+                socketJoined = true
+                clearInterval(socketInterval)
+            }
+        }, 1000)
     }, [])
 
     const socketInitializer = () => {
@@ -50,18 +66,23 @@ const Game: NextPage = () => {
     }
 
     const createHandler = () => {
-        socket?.send(JSON.stringify({event: "CREATE_GAME", data: JSON.stringify({name: "Sean"})}))
+        const event = "CREATE_GAME"
+        const data = JSON.stringify({name: playerName})
+        socket?.send(JSON.stringify({event, data}))
     }
 
     const joinHandler = () => {
-        socket?.send(JSON.stringify({event: "JOIN_GAME", data: JSON.stringify({name: "Ed", gameId: "07dcea05-aada-4a9c-a5d0-36cd0d9cd923"})}))
+        const event = "JOIN_GAME"
+        const data = JSON.stringify({
+            name: playerName, 
+            gameId: gamePassword
+        })
+        socket?.send(JSON.stringify({event, data}))
     }
 
     return (
         <div>
             <button onClick={clickHandler}>Get Deck</button>
-            <button onClick={createHandler}>Create Game</button>
-            <button onClick={joinHandler}>Join Game</button>
             <div className={styles.deck}>
                 {deck && deck.map((card, i) => 
                     <Card

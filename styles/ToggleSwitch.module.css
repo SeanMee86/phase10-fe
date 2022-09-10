@@ -1,12 +1,24 @@
 .container {
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-    border: 1px solid rgba(99, 99, 99, 0.4);
-    width: 85%;
-    min-height: 50px;
+    width: 51px;
+    min-height: 20px;
     box-sizing: border-box;
     position: relative;
     display: flex;
     margin: auto;
+    border-radius: 20px;
+    padding: 3px;
+    overflow: hidden;
+}
+
+.background {
+    background-color: blue;
+    height: 105px;
+    width: 100px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    transition: background-color 0.24s ease-in-out;
 }
 
 .input {
@@ -15,32 +27,26 @@
     position: absolute;
     z-index: 3;
     opacity: 0;
+    top: 0;
+    left: 0;
 }
 
-.container button {
-    border-radius: 0;
-    width: 50%;
-    border: none;
-    font-size: 1.1rem;
-}
-
-.container button {
+.switch {
+    border-radius: 50%;
+    height: 20px;
+    border: 1px solid rgba(99, 99, 99, 0.4);
+    width: 20px;
+    position: relative;
     background-color: white;
-    color: green;
-    transition: all 0.23s ease-in-out;
+    left: 24px;
+    transition: left 0.24s ease-in-out;
+    z-index: 1;
 }
 
-.container button:last-child {
-    background-color: blue;
-    color: white
+.input:checked ~ .switch {
+    left: 0;
 }
 
-.container .input:checked ~ button:last-child {
-    background-color: white;
-    color: blue;
-}
-
-.container .input:checked ~ button {
+.input:checked ~ .background {
     background-color: green;
-    color: white;
 }
