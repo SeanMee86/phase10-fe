@@ -1,13 +1,13 @@
 import type { NextPage } from 'next'
-import Link from 'next/link'
-import styles from '../styles/Home.module.css'
+import { Form } from '@components'
+import Layout from './layout'
 
 const Home: NextPage = () => {
 
   return (
-    <div className={styles.container}>
-      <Link href={'/game'}>Game</Link>
-    </div>
+    <Layout>
+      <Form />
+    </Layout>
   )
 }
 
