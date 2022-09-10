@@ -1,0 +1,27 @@
+.form {
+    padding: 2rem;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-flow: column;
+    border-radius: 4px;
+    max-width: 280px;
+    margin: auto;
+    min-height: 370px;
+    font-family: Arial, Helvetica, sans-serif;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+.inputContainer {
+    display: flex;
+    flex-flow: column;
+    margin: 20px 0;
+}
+
+.input {
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    border: 1px solid rgba(99, 99, 99, 0.2);
+    height: 30px;
+    border-radius: 4px;
+    margin-top: 5px;
+}
