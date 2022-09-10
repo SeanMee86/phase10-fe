@@ -1,0 +1,46 @@
+.container {
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    border: 1px solid rgba(99, 99, 99, 0.4);
+    width: 85%;
+    min-height: 50px;
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    margin: auto;
+}
+
+.input {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: 3;
+    opacity: 0;
+}
+
+.container button {
+    border-radius: 0;
+    width: 50%;
+    border: none;
+    font-size: 1.1rem;
+}
+
+.container button {
+    background-color: white;
+    color: green;
+    transition: all 0.23s ease-in-out;
+}
+
+.container button:last-child {
+    background-color: blue;
+    color: white
+}
+
+.container .input:checked ~ button:last-child {
+    background-color: white;
+    color: blue;
+}
+
+.container .input:checked ~ button {
+    background-color: green;
+    color: white;
+}
