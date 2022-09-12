@@ -17,5 +17,5 @@ export const Primary = Template.bind({});
 Primary.args = {
   message: "Game Password: Some-Password",
   color: "green",
-  isShown: true,
+  showMessage: true,
 };

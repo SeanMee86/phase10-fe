@@ -1,6 +1,6 @@
 import { NextPage } from "next"
 import { useContext, useEffect, useState } from "react"
-import { Card, ICardProps, IPlayer } from "@components"
+import { Card, ICardProps, IPlayer, LoadingSpinner } from "@components"
 import styles from "@styles/Game.module.css"
 import { GameContext } from "./game.context";
 import { useRouter } from "next/router";
@@ -20,11 +20,16 @@ const Game: NextPage = () => {
     const router = useRouter()
     const [deck, setDeck] = useState<ICard[]>()
     const [players, setPlayers] = useState<IPlayer[]>()
+    const [gameCreated, setGameCreated] = useState<boolean>()
     const {
         createGame, 
         playerName, 
-        gamePassword, 
-        setGamePassword
+        gamePassword,
+        gameLoading,
+        setGamePassword,
+        setMessage,
+        setShowMessage,
+        setGameLoading
     } = useContext(GameContext)
 
     useEffect(() => {
@@ -42,6 +47,12 @@ const Game: NextPage = () => {
         }, 1000)
     }, [])
 
+    useEffect(() => {
+        if(!gameCreated) return;
+        setMessage(`Game Password: ${gamePassword}`)
+        setShowMessage(true)
+    }, [gameCreated])
+
     const socketInitializer = () => {
         socket = new WebSocket("ws://localhost:3001")
         socket.addEventListener("message", onSocketMessage)
@@ -57,8 +68,10 @@ const Game: NextPage = () => {
                     break;
                 case "GAME_CREATED":
                     const gameData = JSON.parse(data)
-                    setGamePassword!(gameData.Id)
+                    setGamePassword(gameData.Id)
                     setPlayers([{name: playerName, points: 0}])
+                    setGameCreated(true)
+                    setGameLoading(false)
                     break;
                 case "GAME_JOINED":
                     const playerNames = JSON.parse(data);
@@ -98,21 +111,25 @@ const Game: NextPage = () => {
 
     return (
         <Layout>
-            {createGame && <p>Game Password: {gamePassword}</p>}
-            <button onClick={clickHandler}>Get Deck</button>
-            <div style={{display: "grid", gridTemplateColumns: "repeat(4, 1fr)"}}>
-                <div>
-                    <PlayerContainer players={players}/>
-                </div>
-                <div className={styles.deck}>
-                    {deck && deck.map((card, i) => 
-                        <Card
-                            key={i} 
-                            number={card.Number} 
-                            color={card.Color} />
-                    )}
-                </div>
-            </div>
+            {gameLoading ? 
+                <LoadingSpinner/> : 
+                <>
+                    <button onClick={clickHandler}>Get Deck</button>
+                    <div style={{display: "grid", gridTemplateColumns: "repeat(4, 1fr)"}}>
+                        <div>
+                            <PlayerContainer players={players}/>
+                        </div>
+                        <div className={styles.deck}>
+                            {deck && deck.map((card, i) => 
+                                <Card
+                                    key={i} 
+                                    number={card.Number} 
+                                    color={card.Color} />
+                            )}
+                        </div>
+                    </div>
+                </>
+            }
         </Layout>
     )
 }

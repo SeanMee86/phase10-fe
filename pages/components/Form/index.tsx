@@ -19,7 +19,7 @@ const Form: React.FunctionComponent = () => {
     const [name, setName] = React.useState<string>(playerName)
 
     const onChangeHandler = () => {        
-        setCreateGame!(prevState => !prevState)
+        setCreateGame(prevState => !prevState)
     }
 
     const onClickHandler = (e: SyntheticEvent<HTMLButtonElement>) => {
@@ -34,7 +34,7 @@ const Form: React.FunctionComponent = () => {
             <div className={styles.inputContainer}>
                 <label htmlFor="name">Name</label>
                 <input
-                    onChange={(e) => setPlayerName!(e.currentTarget.value)} 
+                    onChange={(e) => setPlayerName(e.currentTarget.value)} 
                     value={playerName} 
                     className={styles.input} 
                     type="text" 
@@ -43,7 +43,7 @@ const Form: React.FunctionComponent = () => {
             {!createGame && <div className={styles.inputContainer}>
                 <label htmlFor="password">Password</label>
                 <input
-                    onChange={(e) => setGamePassword!(e.currentTarget.value)} 
+                    onChange={(e) => setGamePassword(e.currentTarget.value)} 
                     value={gamePassword} 
                     className={styles.input} 
                     type="text"  

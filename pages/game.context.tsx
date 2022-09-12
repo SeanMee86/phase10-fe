@@ -4,12 +4,17 @@ export type GameContextType = {
     createGame: boolean;
     playerName: string;
     gamePassword?: string;
-    setCreateGame?: Dispatch<SetStateAction<boolean>>;
-    setPlayerName?: Dispatch<SetStateAction<string>>;
-    setGamePassword?: Dispatch<SetStateAction<string>>
+    showMessage: boolean;
+    message: string;
+    messageColor: "green" | "red";
+    gameLoading: boolean;
+    setCreateGame: Dispatch<SetStateAction<boolean>>;
+    setPlayerName: Dispatch<SetStateAction<string>>;
+    setGamePassword: Dispatch<SetStateAction<string>>
+    setShowMessage: Dispatch<SetStateAction<boolean>>
+    setMessage: Dispatch<SetStateAction<string>>
+    setMessageColor: Dispatch<SetStateAction<"green" | "red">>   
+    setGameLoading: Dispatch<SetStateAction<boolean>> 
 }
 
-export const GameContext = createContext<GameContextType>({
-    createGame: false,
-    playerName: ""
-})
+export const GameContext = createContext<GameContextType>({} as GameContextType)
