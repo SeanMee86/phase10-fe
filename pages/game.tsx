@@ -1,11 +1,20 @@
 import { NextPage } from "next"
-import { useContext, useEffect, useState } from "react"
-import { Card, ICardProps, IPlayer, LoadingSpinner } from "@components"
-import styles from "@styles/Game.module.css"
+import { 
+    useContext, 
+    useEffect, 
+    useState 
+} from "react"
+import Layout from "./layout";
+import { 
+    Card, 
+    ICardProps, 
+    IPlayer, 
+    LoadingSpinner 
+} from "@components"
 import { GameContext } from "./game.context";
 import { useRouter } from "next/router";
 import { PlayerContainer } from "@components";
-import Layout from "./layout";
+import styles from "@styles/Game.module.css"
 
 let socket: WebSocket;
 let socketJoined = false;
@@ -16,11 +25,8 @@ interface ICard {
 }
 
 const Game: NextPage = () => {
-
     const router = useRouter()
-    const [deck, setDeck] = useState<ICard[]>()
     const [players, setPlayers] = useState<IPlayer[]>()
-    const [gameCreated, setGameCreated] = useState<boolean>()
     const {
         createGame, 
         playerName, 
@@ -48,10 +54,10 @@ const Game: NextPage = () => {
     }, [])
 
     useEffect(() => {
-        if(!gameCreated) return;
+        if(!gamePassword || !createGame) return;
         setMessage(`Game Password: ${gamePassword}`)
-        setShowMessage(true)
-    }, [gameCreated])
+        setShowMessage({show: true, timer: null})
+    }, [gamePassword])
 
     const socketInitializer = () => {
         socket = new WebSocket("ws://localhost:3001")
@@ -61,37 +67,37 @@ const Game: NextPage = () => {
     const onSocketMessage = (ev: MessageEvent) => {
         try {
             const serverData = JSON.parse(ev.data)
-            const {data} = serverData
+            const { data } = serverData
             switch(serverData.event) {
-                case "GET_DECK":
-                    setDeck(JSON.parse(data) as ICard[])
-                    break;
                 case "GAME_CREATED":
-                    const gameData = JSON.parse(data)
-                    setGamePassword(gameData.Id)
-                    setPlayers([{name: playerName, points: 0}])
-                    setGameCreated(true)
-                    setGameLoading(false)
+                    onGameCreated(data)
                     break;
                 case "GAME_JOINED":
-                    const playerNames = JSON.parse(data);
-                    setPlayers(playerNames.map((player: string) => {
-                        return {
-                            name: player,
-                            points: 0
-                        }
-                    }))
+                    onGameJoined(data)
                     break;
                 default:
-                    console.log("Event not handled");
+                    console.log("Event not handled")
             }
         } catch(e) {
-            console.log(ev);
+            console.log(ev)
         }
     }
 
-    const clickHandler = () => {
-        socket?.send(JSON.stringify({event: "GET_DECK"}))
+    const onGameCreated = (data: string) => {
+        const gameData = JSON.parse(data)
+        setGamePassword(gameData.Id)
+        setPlayers([{name: playerName, points: 0}])
+        setGameLoading(false)
+    } 
+
+    const onGameJoined = (data: string) => {
+        const playerNames = JSON.parse(data)
+            .map((player: string) => ({name: player, points: 0}))
+        const joinedPlayer = playerNames[playerNames.length - 1].name
+        setPlayers(playerNames)
+        setMessage(`${joinedPlayer} has joined the game`)
+        setShowMessage({show: true, timer: 2})
+        setGameLoading(false)
     }
 
     const createHandler = () => {
@@ -113,22 +119,12 @@ const Game: NextPage = () => {
         <Layout>
             {gameLoading ? 
                 <LoadingSpinner/> : 
-                <>
-                    <button onClick={clickHandler}>Get Deck</button>
-                    <div style={{display: "grid", gridTemplateColumns: "repeat(4, 1fr)"}}>
-                        <div>
-                            <PlayerContainer players={players}/>
-                        </div>
-                        <div className={styles.deck}>
-                            {deck && deck.map((card, i) => 
-                                <Card
-                                    key={i} 
-                                    number={card.Number} 
-                                    color={card.Color} />
-                            )}
-                        </div>
+                <div className={styles.gameBoard}>
+                    <PlayerContainer players={players}/>
+                    <div className={styles.deck}>
+                        Cards Go here ...
                     </div>
-                </>
+                </div>
             }
         </Layout>
     )

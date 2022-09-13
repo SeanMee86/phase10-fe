@@ -1,63 +1,43 @@
 import * as React from 'react';
 import styles from "@styles/Form.module.css"
-import { ToggleSwitch } from '@components';
-import { SyntheticEvent } from 'react';
-import { useRouter } from 'next/router';
+import { SyntheticEvent, useContext } from 'react';
 import { GameContext } from 'pages/game.context';
+import Input from './input';
+import JoinCreateSelector from './joinCreateSelector';
 
 const Form: React.FunctionComponent = () => {
 
-    const router = useRouter()
     const { 
         createGame,
         playerName,
         gamePassword, 
-        setCreateGame,
         setPlayerName,
         setGamePassword
-     } = React.useContext(GameContext)
-    const [name, setName] = React.useState<string>(playerName)
+     } = useContext(GameContext)
 
-    const onChangeHandler = () => {        
-        setCreateGame(prevState => !prevState)
+    const onNameChangeHandler = (e: SyntheticEvent<HTMLInputElement>) => {
+        setPlayerName(e.currentTarget.value)
     }
 
-    const onClickHandler = (e: SyntheticEvent<HTMLButtonElement>) => {
-        router.push("/game")
+    const onPasswordChangeHandler = (e: SyntheticEvent<HTMLInputElement>) => {
+        setGamePassword(e.currentTarget.value)
     }
-
-    const btnLabel = createGame ? "Create Game" : "Join Game"
-    const backgroundColor = createGame ? "green" : "blue"
 
     return (
         <div className={styles.form}>
-            <div className={styles.inputContainer}>
-                <label htmlFor="name">Name</label>
-                <input
-                    onChange={(e) => setPlayerName(e.currentTarget.value)} 
-                    value={playerName} 
-                    className={styles.input} 
-                    type="text" 
-                    id='name' />
-            </div>
-            {!createGame && <div className={styles.inputContainer}>
-                <label htmlFor="password">Password</label>
-                <input
-                    onChange={(e) => setGamePassword(e.currentTarget.value)} 
-                    value={gamePassword} 
-                    className={styles.input} 
-                    type="text"  
-                    id="password" />
-            </div>}
-            <div className={styles.createOrJoin}>
-                <p>Create or Join a Game!</p>
-                <ToggleSwitch
-                    isChecked={createGame}
-                    onChangeHandler={onChangeHandler}/>
-                <button onClick={onClickHandler} style={{backgroundColor}}>
-                    {btnLabel}
-                </button>
-            </div>
+            <Input 
+                label={'Name'} 
+                id={'name'} 
+                onChangeHandler={onNameChangeHandler} 
+                value={playerName} />
+            {!createGame && 
+                <Input 
+                    label={'Password'} 
+                    id={'password'} 
+                    onChangeHandler={onPasswordChangeHandler} 
+                    value={gamePassword} />
+            }
+            <JoinCreateSelector/>
         </div>
     );
 }

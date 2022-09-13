@@ -5,3 +5,8 @@
     padding: 3rem;
     grid-column: 2/4;
 }
+
+.gameBoard {
+    display: grid; 
+    grid-template-columns: repeat(4, 1fr);
+}

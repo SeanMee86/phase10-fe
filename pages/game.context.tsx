@@ -4,14 +4,14 @@ export type GameContextType = {
     createGame: boolean;
     playerName: string;
     gamePassword?: string;
-    showMessage: boolean;
+    showMessage: {show: boolean; timer: number | null};
     message: string;
     messageColor: "green" | "red";
     gameLoading: boolean;
     setCreateGame: Dispatch<SetStateAction<boolean>>;
     setPlayerName: Dispatch<SetStateAction<string>>;
     setGamePassword: Dispatch<SetStateAction<string>>
-    setShowMessage: Dispatch<SetStateAction<boolean>>
+    setShowMessage: Dispatch<SetStateAction<{show: boolean; timer: number | null}>>
     setMessage: Dispatch<SetStateAction<string>>
     setMessageColor: Dispatch<SetStateAction<"green" | "red">>   
     setGameLoading: Dispatch<SetStateAction<boolean>> 
