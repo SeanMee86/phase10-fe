@@ -4,16 +4,16 @@ import {
     useEffect, 
     useState 
 } from "react"
-import Layout from "./layout";
+import Layout from "./layout"
 import { 
     Card, 
     ICardProps, 
     IPlayer, 
     LoadingSpinner 
 } from "@components"
-import { GameContext } from "./game.context";
-import { useRouter } from "next/router";
-import { PlayerContainer } from "@components";
+import { GameContext } from "./game.context" 
+import { useRouter } from "next/router"
+import { PlayerContainer } from "@components"
 import styles from "@styles/Game.module.css"
 
 let socket: WebSocket;
