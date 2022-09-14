@@ -7,12 +7,20 @@ const DropDown: React.FunctionComponent = () => {
     const {
         showMessage, 
         message, 
+        setMessage,
         messageColor, 
-        setShowMessage
+        setShowMessage,
+        gamePassword
     } = useContext(GameContext)
 
     const onClickHandler = () => {
         setShowMessage({show: false, timer: null})
+    }
+
+    const copyPassword = () => {
+        navigator.clipboard.writeText(gamePassword as string)
+        setMessage("Password Copied!")
+        setShowMessage(prevState => ({...prevState, timer: 2}))
     }
 
     const [topStyle, setTopStyle] = useState("-100px")
@@ -40,6 +48,8 @@ const DropDown: React.FunctionComponent = () => {
             {showMessage.timer === null && 
                 <button onClick={onClickHandler}>&#10006;</button>}
             {message}
+            {showMessage.timer === null &&
+                <p className={styles.copy} onClick={copyPassword}>Click To Copy Password</p>}
         </div>
     );
 }

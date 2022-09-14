@@ -19,3 +19,15 @@
     border: none;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
+
+.copy {
+    text-align: center;
+    margin-bottom: 0;
+    color: blue;
+    text-decoration: underline;
+}
+
+.copy:hover {
+    cursor: pointer;
+    text-decoration: none;
+}

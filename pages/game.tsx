@@ -27,6 +27,8 @@ interface ICard {
 const Game: NextPage = () => {
     const router = useRouter()
     const [players, setPlayers] = useState<IPlayer[]>()
+    const [host, setHost] = useState<boolean>(false)
+    const [hand, setHand] = useState<ICard[]>()
     const {
         createGame, 
         playerName, 
@@ -75,6 +77,9 @@ const Game: NextPage = () => {
                 case "GAME_JOINED":
                     onGameJoined(data)
                     break;
+                case "GAME_STARTED":
+                    onGameStarted(data)
+                    break;
                 default:
                     console.log("Event not handled")
             }
@@ -88,6 +93,7 @@ const Game: NextPage = () => {
         setGamePassword(gameData.Id)
         setPlayers([{name: playerName, points: 0}])
         setGameLoading(false)
+        setHost(true)
     } 
 
     const onGameJoined = (data: string) => {
@@ -98,6 +104,11 @@ const Game: NextPage = () => {
         setMessage(`${joinedPlayer} has joined the game`)
         setShowMessage({show: true, timer: 2})
         setGameLoading(false)
+    }
+
+    const onGameStarted = (data: string) => {
+        setHand(JSON.parse(data));
+        setHost(false)
     }
 
     const createHandler = () => {
@@ -115,16 +126,32 @@ const Game: NextPage = () => {
         socket?.send(JSON.stringify({event, data}))
     }
 
+    const startGameHandler = () => {
+        const event = "START_GAME"
+        const data = JSON.stringify({
+            Id: gamePassword
+        })
+        socket?.send(JSON.stringify({event, data}))
+    }
+
     return (
         <Layout>
             {gameLoading ? 
                 <LoadingSpinner/> : 
-                <div className={styles.gameBoard}>
-                    <PlayerContainer players={players}/>
-                    <div className={styles.deck}>
-                        Cards Go here ...
+                <>
+                    {host && <button onClick={startGameHandler}>Start Game</button>}
+                    <div className={styles.gameBoard}>
+                        <PlayerContainer players={players}/>
+                        <div className={styles.deck}>
+                            {hand && hand.map((card, i) => 
+                                <Card 
+                                    key={i} 
+                                    number={card.Number} 
+                                    color={card.Color} />
+                            )}
+                        </div>
                     </div>
-                </div>
+                </>
             }
         </Layout>
     )
