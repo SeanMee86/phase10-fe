@@ -1,12 +1,12 @@
 .deck {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-gap: 3rem;
+    display: flex;
+    max-width: 1200px;
+    width: 100%;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
     padding: 3rem;
-    grid-column: 2/4;
 }
 
 .gameBoard {
-    display: grid; 
-    grid-template-columns: repeat(4, 1fr);
+    display: flex; 
 }

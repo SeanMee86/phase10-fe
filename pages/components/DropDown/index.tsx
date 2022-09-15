@@ -23,18 +23,18 @@ const DropDown: React.FunctionComponent = () => {
         setShowMessage(prevState => ({...prevState, timer: 2}))
     }
 
-    const [topStyle, setTopStyle] = useState("-100px")
+    const [topStyle, setTopStyle] = useState("-110px")
 
     useEffect(() => {
         if (showMessage.show) {
             setTopStyle("60px")
             if(showMessage.timer !== null) {
                 setTimeout(() => {
-                    setTopStyle("-100px")
+                    setTopStyle("-110px")
                 }, showMessage.timer*1000)
             }
         } else {
-            setTopStyle("-100px")
+            setTopStyle("-110px")
         }
     }, [showMessage])
 
