@@ -2,7 +2,9 @@ import * as React from 'react';
 import styles from "@styles/PlayerContainer.module.css"
 
 interface IPlayerContainerProps {
-    players?: IPlayer[]
+    players?: IPlayer[];
+    isTurn: boolean;
+    drawCard(): void;
 }
 
 export interface IPlayer {
@@ -10,7 +12,7 @@ export interface IPlayer {
     points: number;
 }
 
-const PlayerContainer: React.FunctionComponent<IPlayerContainerProps> = ({players}) => {
+const PlayerContainer: React.FunctionComponent<IPlayerContainerProps> = ({players, isTurn, drawCard}) => {
   return (
     <div className={styles.outerContainer}>
         {players && players.map(player => (
@@ -19,6 +21,9 @@ const PlayerContainer: React.FunctionComponent<IPlayerContainerProps> = ({player
                 <p>Points: {player.points}</p>
             </div>
         ))}
+        {isTurn && <div className={styles.btnContainer}>
+            <button onClick={drawCard}>Draw Card</button>
+        </div>}
     </div>
   )
 };

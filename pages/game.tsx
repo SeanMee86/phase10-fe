@@ -179,7 +179,10 @@ const Game: NextPage = () => {
                 <>
                     {host && <button onClick={startGameHandler}>Start Game</button>}
                     <div className={styles.gameBoard}>
-                        <PlayerContainer players={players}/>
+                        <PlayerContainer 
+                            drawCard={drawCardHandler} 
+                            isTurn={isTurn} 
+                            players={players}/>
                         <div className={styles.deck}>
                             {hand && hand.map((card, i) => 
                                 <Card 
@@ -189,9 +192,7 @@ const Game: NextPage = () => {
                             )}
                         </div>
                     </div>
-                    {isTurn && <div>
-                        <button onClick={drawCardHandler}>Draw Card</button>
-                    </div>}
+                    
                 </>
             }
         </Layout>

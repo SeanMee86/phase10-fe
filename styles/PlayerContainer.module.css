@@ -14,3 +14,22 @@
     border-right: 1px solid black;
     padding: 40px 20px;
 }
+
+.btnContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+}
+
+.btnContainer button {
+    color: white;
+    background-color: rgb(18, 114, 5);
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    border-radius: 4px;
+    border: none;
+    min-width: 150px;
+    margin-top: 20px;
+}
