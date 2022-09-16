@@ -34,6 +34,10 @@ const Game: NextPage = () => {
         playerName, 
         gamePassword,
         gameLoading,
+        gameStarted,
+        isTurn,
+        setIsTurn,
+        setGameStarted,
         setGamePassword,
         setMessage,
         setMessageColor,
@@ -61,6 +65,14 @@ const Game: NextPage = () => {
         setMessage(`Game Password: ${gamePassword}`)
         setShowMessage({show: true, timer: null})
     }, [gamePassword])
+
+    useEffect(() => {
+        if(!gameStarted) return;
+        if(host) {
+            setHost(false)
+            setIsTurn(true)
+        }
+    }, [gameStarted])
 
     const socketInitializer = () => {
         socket = new WebSocket("ws://localhost:3001")
@@ -122,7 +134,7 @@ const Game: NextPage = () => {
 
     const onGameStarted = (data: string) => {
         setHand(JSON.parse(data));
-        setHost(false)
+        setGameStarted(true)
     }
 
     const onCardDrawn = (data: string) => {
@@ -177,9 +189,9 @@ const Game: NextPage = () => {
                             )}
                         </div>
                     </div>
-                    <div>
+                    {isTurn && <div>
                         <button onClick={drawCardHandler}>Draw Card</button>
-                    </div>
+                    </div>}
                 </>
             }
         </Layout>

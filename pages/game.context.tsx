@@ -8,6 +8,10 @@ export type GameContextType = {
     message: string;
     messageColor: "green" | "red";
     gameLoading: boolean;
+    isTurn: boolean;
+    gameStarted: boolean;
+    setIsTurn: Dispatch<SetStateAction<boolean>>
+    setGameStarted: Dispatch<SetStateAction<boolean>>
     setCreateGame: Dispatch<SetStateAction<boolean>>;
     setPlayerName: Dispatch<SetStateAction<string>>;
     setGamePassword: Dispatch<SetStateAction<string>>
