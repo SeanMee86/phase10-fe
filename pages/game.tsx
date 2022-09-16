@@ -36,6 +36,7 @@ const Game: NextPage = () => {
         gameLoading,
         setGamePassword,
         setMessage,
+        setMessageColor,
         setShowMessage,
         setGameLoading
     } = useContext(GameContext)
@@ -80,12 +81,25 @@ const Game: NextPage = () => {
                 case "GAME_STARTED":
                     onGameStarted(data)
                     break;
+                case "CARD_DRAWN":
+                    onCardDrawn(data)
+                    break;
+                case "ERR_GAME_IN_PROGRESS":
+                    onGameInProgressErr(data);
+                    break;
                 default:
                     console.log("Event not handled")
             }
         } catch(e) {
             console.log(ev)
         }
+    }
+
+    const onGameInProgressErr = (data: string) => {
+        setMessageColor("red")
+        setMessage(JSON.parse(data).error)
+        setShowMessage({show: true, timer: 3})
+        router.push("/")
     }
 
     const onGameCreated = (data: string) => {
@@ -111,6 +125,10 @@ const Game: NextPage = () => {
         setHost(false)
     }
 
+    const onCardDrawn = (data: string) => {
+        setHand(JSON.parse(data))
+    }
+
     const createHandler = () => {
         const event = "CREATE_GAME"
         const data = JSON.stringify({name: playerName})
@@ -134,6 +152,14 @@ const Game: NextPage = () => {
         socket?.send(JSON.stringify({event, data}))
     }
 
+    const drawCardHandler = () => {
+        const event = "DRAW_CARD"
+        const data = JSON.stringify({
+            Id: gamePassword
+        })
+        socket?.send(JSON.stringify({event, data}))
+    }
+
     return (
         <Layout>
             {gameLoading ? 
@@ -150,6 +176,9 @@ const Game: NextPage = () => {
                                     color={card.Color} />
                             )}
                         </div>
+                    </div>
+                    <div>
+                        <button onClick={drawCardHandler}>Draw Card</button>
                     </div>
                 </>
             }
