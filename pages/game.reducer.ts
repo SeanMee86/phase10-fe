@@ -76,7 +76,6 @@ const reducer = (state: GameContextType["game"], action: ActionsType): GameConte
                 ...state,
                 hand: [...action.payload],
                 isGameStarted: true,
-                canDraw: true
             }
         case IN_PROGRESS_ERROR:
             return {
@@ -93,7 +92,8 @@ const reducer = (state: GameContextType["game"], action: ActionsType): GameConte
         case SET_IS_TURN:
             return {
                 ...state,
-                isTurn: action.payload
+                isTurn: action.payload,
+                canDraw: action.payload
             }
         case SUBMIT_FORM:
             return {

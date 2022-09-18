@@ -24,7 +24,7 @@ const PlayerContainer: React.FunctionComponent<IPlayerContainerProps> = ({player
                 <p>Points: {player.points}</p>
             </div>
         ))}
-        {isTurn && canDraw && <div className={styles.btnContainer}>
+        {canDraw && <div className={styles.btnContainer}>
             <button onClick={drawCard}>Draw Card</button>
         </div>}
     </div>
