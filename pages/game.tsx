@@ -136,6 +136,14 @@ const Game: NextPage = () => {
         const data = JSON.stringify({name: playerName})
         socket?.send(JSON.stringify({event, data}))
     }
+
+    const discardHandler = () => {
+        const event = "DISCARD_CARD"
+        // Data needs card position, color, and number
+        const data = JSON.stringify({
+            Id: gamePassword
+        })
+    }
     
     const drawCardHandler = () => {
         const event = "DRAW_CARD"
