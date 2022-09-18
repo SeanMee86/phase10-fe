@@ -1,24 +1,41 @@
-import { createContext, Dispatch, SetStateAction } from "react";
+import { createContext } from "react";
+import { ICardProps } from "@components"
 
-export type GameContextType = {
+export interface ICard {
+    Number: ICardProps["number"];
+    Color: ICardProps["color"];
+}
+
+export type GameType = {
     createGame: boolean;
     playerName: string;
     gamePassword?: string;
     showMessage: {show: boolean; timer: number | null};
-    message: string;
-    messageColor: "green" | "red";
+    message: {
+        copy: string,
+        color: "green" | "red"
+    };
     gameLoading: boolean;
     isTurn: boolean;
-    gameStarted: boolean;
-    setIsTurn: Dispatch<SetStateAction<boolean>>
-    setGameStarted: Dispatch<SetStateAction<boolean>>
-    setCreateGame: Dispatch<SetStateAction<boolean>>;
-    setPlayerName: Dispatch<SetStateAction<string>>;
-    setGamePassword: Dispatch<SetStateAction<string>>
-    setShowMessage: Dispatch<SetStateAction<{show: boolean; timer: number | null}>>
-    setMessage: Dispatch<SetStateAction<string>>
-    setMessageColor: Dispatch<SetStateAction<"green" | "red">>   
-    setGameLoading: Dispatch<SetStateAction<boolean>> 
+    isGameStarted: boolean;
+    hand: ICard[]
+}
+
+export type GameContextType = {
+    game: GameType;
+    gameCreated: (pwd: string) => void;
+    gameJoined: (joiner: string) => void;
+    setIsTurn: (isTurn: boolean) => void;
+    gameStarted: (hand: ICard[]) => void;
+    updateHand: (hand: ICard[]) => void;
+    submitForm: (payload: {
+        createGame: boolean;
+        playerName: string;
+        gamePassword: string;
+    }) => void;
+    closeMessage: () => void;
+    copyPassword: () => void;
+    inProgressError: (error: string) => void;
 }
 
 export const GameContext = createContext<GameContextType>({} as GameContextType)

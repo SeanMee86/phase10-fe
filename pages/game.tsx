@@ -7,7 +7,6 @@ import {
 import Layout from "./layout"
 import { 
     Card, 
-    ICardProps, 
     IPlayer, 
     LoadingSpinner 
 } from "@components"
@@ -19,30 +18,26 @@ import styles from "@styles/Game.module.css"
 let socket: WebSocket;
 let socketJoined = false;
 
-interface ICard {
-    Number: ICardProps["number"];
-    Color: ICardProps["color"];
-}
-
 const Game: NextPage = () => {
     const router = useRouter()
     const [players, setPlayers] = useState<IPlayer[]>()
     const [host, setHost] = useState<boolean>(false)
-    const [hand, setHand] = useState<ICard[]>()
     const {
-        createGame, 
-        playerName, 
-        gamePassword,
-        gameLoading,
+        game: {
+            hand,
+            createGame, 
+            playerName, 
+            gamePassword,
+            gameLoading,
+            isGameStarted,
+            isTurn,
+        },
+        gameCreated,
+        gameJoined,
         gameStarted,
-        isTurn,
+        inProgressError,
         setIsTurn,
-        setGameStarted,
-        setGamePassword,
-        setMessage,
-        setMessageColor,
-        setShowMessage,
-        setGameLoading
+        updateHand
     } = useContext(GameContext)
 
     useEffect(() => {
@@ -50,32 +45,27 @@ const Game: NextPage = () => {
             router.push("/")
             return
         }
+        if(socketJoined) return;
         socketInitializer()
         const socketInterval = setInterval(() => {
-            if(socket.readyState === 1 && !socketJoined) {
-                createGame ? createHandler() : joinHandler()
-                socketJoined = true
+            if(socket.readyState === 1) {
+                createGame ? createGameHandler() : joinGameHandler()
                 clearInterval(socketInterval)
             }
         }, 1000)
     }, [])
 
     useEffect(() => {
-        if(!gamePassword || !createGame) return;
-        setMessage(`Game Password: ${gamePassword}`)
-        setShowMessage({show: true, timer: null})
-    }, [gamePassword])
-
-    useEffect(() => {
-        if(!gameStarted) return;
+        if(!isGameStarted) return;
         if(host) {
             setHost(false)
             setIsTurn(true)
         }
-    }, [gameStarted])
+    }, [isGameStarted])
 
     const socketInitializer = () => {
         socket = new WebSocket("ws://localhost:3001")
+        socketJoined = true
         socket.addEventListener("message", onSocketMessage)
     }
 
@@ -84,6 +74,9 @@ const Game: NextPage = () => {
             const serverData = JSON.parse(ev.data)
             const { data } = serverData
             switch(serverData.event) {
+                case "CARD_DRAWN":
+                    onCardDrawn(data)
+                    break;
                 case "GAME_CREATED":
                     onGameCreated(data)
                     break;
@@ -93,11 +86,8 @@ const Game: NextPage = () => {
                 case "GAME_STARTED":
                     onGameStarted(data)
                     break;
-                case "CARD_DRAWN":
-                    onCardDrawn(data)
-                    break;
                 case "ERR_GAME_IN_PROGRESS":
-                    onGameInProgressErr(data);
+                    onInProgressError(data);
                     break;
                 default:
                     console.log("Event not handled")
@@ -106,48 +96,54 @@ const Game: NextPage = () => {
             console.log(ev)
         }
     }
-
-    const onGameInProgressErr = (data: string) => {
-        setMessageColor("red")
-        setMessage(JSON.parse(data).error)
-        setShowMessage({show: true, timer: 3})
-        router.push("/")
+    
+    // ********************** STATE UPDATES *******************************
+    
+    const onCardDrawn = (data: string) => {
+        updateHand(JSON.parse(data))
     }
 
     const onGameCreated = (data: string) => {
-        const gameData = JSON.parse(data)
-        setGamePassword(gameData.Id)
+        gameCreated(JSON.parse(data).Id)
         setPlayers([{name: playerName, points: 0}])
-        setGameLoading(false)
         setHost(true)
     } 
-
+    
     const onGameJoined = (data: string) => {
         const playerNames = JSON.parse(data)
-            .map((player: string) => ({name: player, points: 0}))
+        .map((player: string) => ({name: player, points: 0}))
         const joinedPlayer = playerNames[playerNames.length - 1].name
         setPlayers(playerNames)
-        setMessage(`${joinedPlayer} has joined the game`)
-        setShowMessage({show: true, timer: 2})
-        setGameLoading(false)
+        gameJoined(joinedPlayer)
+        
     }
-
+    
     const onGameStarted = (data: string) => {
-        setHand(JSON.parse(data));
-        setGameStarted(true)
+        gameStarted(JSON.parse(data))
+    }
+    
+    const onInProgressError = (data: string) => {
+        inProgressError(JSON.parse(data).error)
+        router.push("/")
     }
 
-    const onCardDrawn = (data: string) => {
-        setHand(JSON.parse(data))
-    }
+    // ****************** SOCKET EVENTS **********************
 
-    const createHandler = () => {
+    const createGameHandler = () => {
         const event = "CREATE_GAME"
         const data = JSON.stringify({name: playerName})
         socket?.send(JSON.stringify({event, data}))
     }
+    
+    const drawCardHandler = () => {
+        const event = "DRAW_CARD"
+        const data = JSON.stringify({
+            Id: gamePassword
+        })
+        socket?.send(JSON.stringify({event, data}))
+    }
 
-    const joinHandler = () => {
+    const joinGameHandler = () => {
         const event = "JOIN_GAME"
         const data = JSON.stringify({
             name: playerName, 
@@ -158,14 +154,6 @@ const Game: NextPage = () => {
 
     const startGameHandler = () => {
         const event = "START_GAME"
-        const data = JSON.stringify({
-            Id: gamePassword
-        })
-        socket?.send(JSON.stringify({event, data}))
-    }
-
-    const drawCardHandler = () => {
-        const event = "DRAW_CARD"
         const data = JSON.stringify({
             Id: gamePassword
         })
