@@ -35,6 +35,7 @@ export type GameContextType = {
     }) => void;
     closeMessage: () => void;
     copyPassword: () => void;
+    inProgressError: (error: string) => void;
 }
 
 export const GameContext = createContext<GameContextType>({} as GameContextType)
