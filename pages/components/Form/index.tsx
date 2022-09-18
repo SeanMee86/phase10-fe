@@ -1,19 +1,13 @@
 import * as React from 'react';
 import styles from "@styles/Form.module.css"
-import { SyntheticEvent, useContext } from 'react';
-import { GameContext } from 'pages/game.context';
+import { SyntheticEvent, useState } from 'react';
 import Input from './input';
 import JoinCreateSelector from './joinCreateSelector';
 
 const Form: React.FunctionComponent = () => {
-
-    const { 
-        createGame,
-        playerName,
-        gamePassword, 
-        setPlayerName,
-        setGamePassword
-     } = useContext(GameContext)
+    const [createGame, setCreateGame] = useState<boolean>(true)
+    const [playerName, setPlayerName] = useState<string>("")
+    const [gamePassword, setGamePassword] = useState<string>("")
 
     const onNameChangeHandler = (e: SyntheticEvent<HTMLInputElement>) => {
         setPlayerName(e.currentTarget.value)
@@ -37,7 +31,11 @@ const Form: React.FunctionComponent = () => {
                     onChangeHandler={onPasswordChangeHandler} 
                     value={gamePassword} />
             }
-            <JoinCreateSelector/>
+            <JoinCreateSelector 
+                createGame={createGame} 
+                setCreateGame={setCreateGame}
+                playerName={playerName}
+                gamePassword={gamePassword}/>
         </div>
     );
 }

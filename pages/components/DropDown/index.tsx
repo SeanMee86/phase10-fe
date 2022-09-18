@@ -5,22 +5,22 @@ import { useContext, useEffect, useState } from 'react';
 
 const DropDown: React.FunctionComponent = () => {
     const {
-        showMessage, 
-        message, 
-        setMessage,
-        messageColor, 
-        setShowMessage,
-        gamePassword
+        game: {
+            showMessage, 
+            message, 
+            gamePassword
+        },
+        copyPassword,
+        closeMessage
     } = useContext(GameContext)
 
     const onClickHandler = () => {
-        setShowMessage({show: false, timer: null})
+        closeMessage()
     }
 
-    const copyPassword = () => {
+    const onCopyPassword = () => {
         navigator.clipboard.writeText(gamePassword as string)
-        setMessage("Password Copied!")
-        setShowMessage(prevState => ({...prevState, timer: 2}))
+        copyPassword()
     }
 
     const [topStyle, setTopStyle] = useState("-110px")
@@ -42,14 +42,14 @@ const DropDown: React.FunctionComponent = () => {
         <div 
             className={styles.container} 
             style={{
-                border: `1px solid ${messageColor}`, 
+                border: `1px solid ${message.color}`, 
                 top: topStyle
             }}>
             {showMessage.timer === null && 
                 <button onClick={onClickHandler}>&#10006;</button>}
-            {message}
+            {message.copy}
             {showMessage.timer === null &&
-                <p className={styles.copy} onClick={copyPassword}>Click To Copy Password</p>}
+                <p className={styles.copy} onClick={onCopyPassword}>Click To Copy Password</p>}
         </div>
     );
 }
