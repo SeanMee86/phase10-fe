@@ -20,6 +20,7 @@ export type GameType = {
     };
     playerName: string;
     showMessage: {show: boolean; timer: number | null};
+    willDiscard: boolean
 }
 
 export interface IGameContext {
@@ -32,6 +33,7 @@ export interface IGameContext {
     gameJoined(joiner: string): void;
     gameStarted(hand: ICard[]): void;
     setIsTurn(isTurn: boolean): void;
+    setWillDiscard(willDiscard: boolean): void;
     submitForm(payload: {
         createGame: boolean;
         playerName: string;

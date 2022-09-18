@@ -15,7 +15,8 @@ import {
     SUBMIT_FORM,
     CLOSE_MESSAGE,
     COPY_PASSWORD,
-    IN_PROGRESS_ERROR
+    IN_PROGRESS_ERROR,
+    SET_WILL_DISCARD
 } from "./game.actions"
 
 const GameProvider: React.FC<{children: ReactNode}> = (props) => {
@@ -37,6 +38,7 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
             show: false,
             timer: null
         },
+        willDiscard: false
     }
     
     const [state, dispatch] = useReducer(reducer, initialState)
@@ -72,6 +74,10 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
     const setIsTurn = (isTurn: boolean) => {
         dispatch({type: SET_IS_TURN, payload: isTurn})
     }
+
+    const setWillDiscard = (willDiscard: boolean) => {
+        dispatch({type: SET_WILL_DISCARD, payload: willDiscard})
+    }
     
     const submitForm = (payload: {
         createGame: boolean;
@@ -91,6 +97,7 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
         gameStarted,
         inProgressError,
         setIsTurn,
+        setWillDiscard,
         submitForm,
     }
 

@@ -8,6 +8,7 @@ import {
     GAME_STARTED, 
     IN_PROGRESS_ERROR, 
     SET_IS_TURN, 
+    SET_WILL_DISCARD,
     SUBMIT_FORM, 
 } from "./game.actions"
 
@@ -94,6 +95,11 @@ const reducer = (state: IGameContext["game"], action: ActionsType): IGameContext
                 ...state,
                 isTurn: action.payload,
                 canDraw: action.payload
+            }
+        case SET_WILL_DISCARD:
+            return {
+                ...state,
+                willDiscard: action.payload
             }
         case SUBMIT_FORM:
             return {
