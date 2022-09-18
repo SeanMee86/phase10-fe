@@ -1,0 +1,8 @@
+export const CLOSE_MESSAGE = "CLOSE_MESSAGE"
+export const COPY_PASSWORD = "COPY_PASSWORD"
+export const GAME_CREATED = "GAME_CREATED"
+export const GAME_JOINED = "GAME_JOINED"
+export const GAME_STARTED = "GAME_STARTED"
+export const SET_IS_TURN = "SET_IS_TURN"
+export const SUBMIT_FORM = "SUBMIT_FORM"
+export const UPDATE_HAND = "UPDATE_HAND"

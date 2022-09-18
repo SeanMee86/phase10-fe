@@ -59,7 +59,7 @@ const reducer = (state: GameContextType["game"], action: ActionsType): GameConte
             return {
                 ...state,
                 message: {
-                    copy: `${action.payload.name} has joined the game`,
+                    copy: `${action.payload} has joined the game`,
                     color: "green"
                 },
                 showMessage: {
@@ -67,7 +67,6 @@ const reducer = (state: GameContextType["game"], action: ActionsType): GameConte
                     timer: 2
                 },
                 gameLoading: false,
-                gamePassword: action.payload.password
             }
         case GAME_STARTED:
             return {
@@ -128,11 +127,8 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
         dispatch({type: GAME_CREATED, payload: password})
     }
 
-    const gameJoined = (payload: {
-        name: string;
-        password: string;
-    }) => {
-        dispatch({type: GAME_JOINED, payload})   
+    const gameJoined = (joiner: string) => {
+        dispatch({type: GAME_JOINED, payload: joiner})   
     }
     
     const gameStarted = (hand: ICard[]) => {

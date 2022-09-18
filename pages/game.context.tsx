@@ -24,10 +24,7 @@ export type GameType = {
 export type GameContextType = {
     game: GameType;
     gameCreated: (pwd: string) => void;
-    gameJoined: (payload: {
-        name: string;
-        password: string;
-    }) => void;
+    gameJoined: (joiner: string) => void;
     setIsTurn: (isTurn: boolean) => void;
     gameStarted: (hand: ICard[]) => void;
     updateHand: (hand: ICard[]) => void;

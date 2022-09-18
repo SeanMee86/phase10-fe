@@ -18,6 +18,8 @@ import styles from "@styles/Game.module.css"
 let socket: WebSocket;
 let socketJoined = false;
 
+// Finish setting up Reducer (Need On Game In Progress Error)
+
 const Game: NextPage = () => {
     const router = useRouter()
     const [players, setPlayers] = useState<IPlayer[]>()
@@ -114,10 +116,7 @@ const Game: NextPage = () => {
             .map((player: string) => ({name: player, points: 0}))
         const joinedPlayer = playerNames[playerNames.length - 1].name
         setPlayers(playerNames)
-        gameJoined({
-            name: joinedPlayer,
-            password: gamePassword!
-        })
+        gameJoined(joinedPlayer)
         
     }
 
