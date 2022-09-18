@@ -176,6 +176,7 @@ const Game: NextPage = () => {
                             {hand && hand.map((card, i) => 
                                 <Card 
                                     key={i} 
+                                    position={i}
                                     number={card.Number} 
                                     color={card.Color} />
                             )}

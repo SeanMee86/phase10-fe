@@ -14,7 +14,7 @@ export interface IPlayer {
 }
 
 const PlayerContainer: React.FunctionComponent<IPlayerContainerProps> = ({players, drawCard}) => {
-    const { game, setWillDiscard } = useContext(GameContext)
+    const { game, noDiscardSelectedMsg,setWillDiscard } = useContext(GameContext)
 
     const initDiscard = () => {
         setWillDiscard(true)
@@ -22,6 +22,14 @@ const PlayerContainer: React.FunctionComponent<IPlayerContainerProps> = ({player
 
     const undoDiscard = () => {
         setWillDiscard(false)
+    }
+
+    const confirmDiscard = () => {
+        if(game.discardSelected === null) {
+            noDiscardSelectedMsg()
+        } else {
+            console.log("Confirmed Discard", game.discardSelected);
+        }
     }
 
     const showDiscardBtn = !game.willDiscard && !game.canDraw && game.isGameStarted && game.isTurn
@@ -46,7 +54,7 @@ const PlayerContainer: React.FunctionComponent<IPlayerContainerProps> = ({player
                     <button onClick={undoDiscard}>Undo Discard</button>
                 </div>
                 <div className={styles.btnContainer}>
-                    <button onClick={undoDiscard}>Confirm Discard</button>
+                    <button onClick={confirmDiscard}>Confirm Discard</button>
                 </div>
             </>}
         </div>

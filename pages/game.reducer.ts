@@ -7,6 +7,8 @@ import {
     GAME_JOINED, 
     GAME_STARTED, 
     IN_PROGRESS_ERROR, 
+    NO_DISCARD_SELECTED_MSG, 
+    SELECT_DISCARD, 
     SET_IS_TURN, 
     SET_WILL_DISCARD,
     SUBMIT_FORM, 
@@ -90,6 +92,23 @@ const reducer = (state: IGameContext["game"], action: ActionsType): IGameContext
                     timer: 4
                 }
             }
+        case NO_DISCARD_SELECTED_MSG:
+            return {
+                ...state,
+                message: {
+                    color: "red",
+                    copy: "No card selected..."
+                },
+                showMessage: {
+                    show: true,
+                    timer: 3
+                }
+            }
+        case SELECT_DISCARD:
+            return {
+                ...state,
+                discardSelected: action.payload
+            }
         case SET_IS_TURN:
             return {
                 ...state,
@@ -99,7 +118,8 @@ const reducer = (state: IGameContext["game"], action: ActionsType): IGameContext
         case SET_WILL_DISCARD:
             return {
                 ...state,
-                willDiscard: action.payload
+                willDiscard: action.payload,
+                discardSelected: null
             }
         case SUBMIT_FORM:
             return {

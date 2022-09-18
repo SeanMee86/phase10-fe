@@ -16,7 +16,9 @@ import {
     CLOSE_MESSAGE,
     COPY_PASSWORD,
     IN_PROGRESS_ERROR,
-    SET_WILL_DISCARD
+    SET_WILL_DISCARD,
+    NO_DISCARD_SELECTED_MSG,
+    SELECT_DISCARD
 } from "./game.actions"
 
 const GameProvider: React.FC<{children: ReactNode}> = (props) => {
@@ -24,6 +26,7 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
     const initialState: GameType = {
         canDraw: false,
         createGame: false,
+        discardSelected: null,
         gameLoading: false,
         gamePassword: "",
         hand: [],
@@ -71,6 +74,14 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
         dispatch({type: IN_PROGRESS_ERROR, payload: error})
     } 
 
+    const noDiscardSelectedMsg = () => {
+        dispatch({type: NO_DISCARD_SELECTED_MSG})
+    }
+
+    const selectDiscard = (cardIdx: number) => {
+        dispatch({type: SELECT_DISCARD, payload: cardIdx})
+    }
+
     const setIsTurn = (isTurn: boolean) => {
         dispatch({type: SET_IS_TURN, payload: isTurn})
     }
@@ -96,6 +107,8 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
         gameJoined,
         gameStarted,
         inProgressError,
+        noDiscardSelectedMsg,
+        selectDiscard,
         setIsTurn,
         setWillDiscard,
         submitForm,
