@@ -21,6 +21,7 @@ import {
     SELECT_DISCARD,
     DISCARD_CARD
 } from "./game.actions"
+import { IPlayer } from "./components";
 
 const GameProvider: React.FC<{children: ReactNode}> = (props) => {
 
@@ -38,6 +39,7 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
             copy: ""
         },
         playerName: "",
+        players: [],
         showMessage: {
             show: false,
             timer: null
@@ -63,12 +65,12 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
         dispatch({type: DRAW_CARD, payload: hand})
     }
 
-    const gameCreated = (password: string) => {
-        dispatch({type: GAME_CREATED, payload: password})
+    const gameCreated = (payload: {password: string; name: string;}) => {
+        dispatch({type: GAME_CREATED, payload})
     }
 
-    const gameJoined = (joiner: string) => {
-        dispatch({type: GAME_JOINED, payload: joiner})   
+    const gameJoined = (payload: IPlayer[]) => {
+        dispatch({type: GAME_JOINED, payload})   
     }
     
     const gameStarted = (hand: ICard[]) => {

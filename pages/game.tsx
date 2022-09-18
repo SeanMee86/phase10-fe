@@ -7,7 +7,6 @@ import {
 import Layout from "./layout"
 import { 
     Card, 
-    IPlayer, 
     LoadingSpinner,
     PlayerContainer 
 } from "@components"
@@ -20,7 +19,6 @@ let socketJoined = false;
 
 const Game: NextPage = () => {
     const router = useRouter()
-    const [players, setPlayers] = useState<IPlayer[]>()
     const [host, setHost] = useState<boolean>(false)
     const {
         game: {
@@ -30,7 +28,8 @@ const Game: NextPage = () => {
             gamePassword,
             gameLoading,
             isGameStarted,
-            discardSelected
+            discardSelected,
+            players
         },
         discardCard,
         drawCard,
@@ -95,6 +94,9 @@ const Game: NextPage = () => {
                 case "ERR_GAME_IN_PROGRESS":
                     onInProgressError(data);
                     break;
+                case "NEXT_PLAYER_SET":
+                    console.log(data)
+                    break;
                 default:
                     console.log("Event not handled")
             }
@@ -114,18 +116,14 @@ const Game: NextPage = () => {
     }
 
     const onGameCreated = (data: string) => {
-        gameCreated(JSON.parse(data).Id)
-        setPlayers([{name: playerName, points: 0}])
+        gameCreated({password: JSON.parse(data).Id, name: playerName})
         setHost(true)
     } 
     
     const onGameJoined = (data: string) => {
-        const playerNames = JSON.parse(data)
-        .map((player: string) => ({name: player, points: 0}))
-        const joinedPlayer = playerNames[playerNames.length - 1].name
-        setPlayers(playerNames)
-        gameJoined(joinedPlayer)
-        
+        const playerArray = JSON.parse(data)
+        .map((player: string, index: number) => ({name: player, points: 0, position: index}))
+        gameJoined(playerArray)
     }
     
     const onGameStarted = (data: string) => {
@@ -203,7 +201,6 @@ const Game: NextPage = () => {
                             )}
                         </div>
                     </div>
-                    
                 </>
             }
         </Layout>

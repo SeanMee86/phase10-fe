@@ -12,6 +12,7 @@ interface IPlayerContainerProps {
 export interface IPlayer {
     name: string;
     points: number;
+    position: number;
 }
 
 const PlayerContainer: React.FunctionComponent<IPlayerContainerProps> = ({players, drawCard, discardCard}) => {

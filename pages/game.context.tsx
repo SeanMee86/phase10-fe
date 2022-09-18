@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { ICardProps } from "@components"
+import { ICardProps, IPlayer } from "@components"
 
 export interface ICard {
     Color: ICardProps["color"];
@@ -12,7 +12,8 @@ export type GameType = {
     discardSelected: number | null;
     gameLoading: boolean;
     gamePassword?: string;
-    hand: ICard[]
+    players: IPlayer[];
+    hand: ICard[];
     isGameStarted: boolean;
     isTurn: boolean;
     message: {
@@ -30,8 +31,8 @@ export interface IGameContext {
     copyPassword(): void;
     discardCard(hand: ICard[]): void;
     drawCard(hand: ICard[]): void;
-    gameCreated(pwd: string): void;
-    gameJoined(joiner: string): void;
+    gameCreated(payload: {password: string; name: string}): void;
+    gameJoined(payload: IPlayer[]): void;
     gameStarted(hand: ICard[]): void;
     inProgressError(error: string): void;
     noDiscardSelectedMsg(): void;

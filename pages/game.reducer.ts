@@ -57,24 +57,27 @@ const reducer = (state: IGameContext["game"], action: ActionsType): IGameContext
                 canDraw: false
             }
         case GAME_CREATED:
+            const newPlayer =  {name: action.payload.name, points: 0, position: state.players.length}
             return {
                 ...state,
-                gamePassword: action.payload,
+                gamePassword: action.payload.password,
                 gameLoading: false,
                 message: {
-                    copy: `Game Password: ${action.payload}`,
+                    copy: `Game Password: ${action.payload.password}`,
                     color: "green"
                 },
                 showMessage: {
                     ...state.showMessage,
                     show: true
                 },
+                players: [...state.players, newPlayer]
             }
         case GAME_JOINED:
+            const newPlayerName = action.payload[action.payload.length-1].name
             return {
                 ...state,
                 message: {
-                    copy: `${action.payload} has joined the game`,
+                    copy: `${newPlayerName} has joined the game`,
                     color: "green"
                 },
                 showMessage: {
@@ -82,6 +85,7 @@ const reducer = (state: IGameContext["game"], action: ActionsType): IGameContext
                     timer: 2
                 },
                 gameLoading: false,
+                players: [...action.payload]
             }
         case GAME_STARTED:
             return {
