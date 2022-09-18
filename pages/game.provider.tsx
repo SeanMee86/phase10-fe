@@ -18,7 +18,8 @@ import {
     IN_PROGRESS_ERROR,
     SET_WILL_DISCARD,
     NO_DISCARD_SELECTED_MSG,
-    SELECT_DISCARD
+    SELECT_DISCARD,
+    DISCARD_CARD
 } from "./game.actions"
 
 const GameProvider: React.FC<{children: ReactNode}> = (props) => {
@@ -52,6 +53,10 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
 
     const copyPassword = () => {
         dispatch({type: COPY_PASSWORD})
+    }
+
+    const discardCard = (hand: ICard[]) => {
+        dispatch({type: DISCARD_CARD, payload: hand})
     }
     
     const drawCard = (hand: ICard[]) => {
@@ -102,6 +107,7 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
         game: state,
         closeMessage,
         copyPassword,
+        discardCard,
         drawCard,
         gameCreated,
         gameJoined,

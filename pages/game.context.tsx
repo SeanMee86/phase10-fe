@@ -28,6 +28,7 @@ export interface IGameContext {
     game: GameType;
     closeMessage(): void;
     copyPassword(): void;
+    discardCard(hand: ICard[]): void;
     drawCard(hand: ICard[]): void;
     gameCreated(pwd: string): void;
     gameJoined(joiner: string): void;

@@ -1,5 +1,6 @@
 export const CLOSE_MESSAGE = "CLOSE_MESSAGE"
 export const COPY_PASSWORD = "COPY_PASSWORD"
+export const DISCARD_CARD = "DISCARD_CARD"
 export const DRAW_CARD = "DRAW_CARD"
 export const GAME_CREATED = "GAME_CREATED"
 export const GAME_JOINED = "GAME_JOINED"

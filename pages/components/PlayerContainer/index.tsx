@@ -6,6 +6,7 @@ import styles from "@styles/PlayerContainer.module.css"
 interface IPlayerContainerProps {
     players?: IPlayer[];
     drawCard(): void;
+    discardCard(): void;
 }
 
 export interface IPlayer {
@@ -13,7 +14,7 @@ export interface IPlayer {
     points: number;
 }
 
-const PlayerContainer: React.FunctionComponent<IPlayerContainerProps> = ({players, drawCard}) => {
+const PlayerContainer: React.FunctionComponent<IPlayerContainerProps> = ({players, drawCard, discardCard}) => {
     const { game, noDiscardSelectedMsg,setWillDiscard } = useContext(GameContext)
 
     const initDiscard = () => {
@@ -28,12 +29,13 @@ const PlayerContainer: React.FunctionComponent<IPlayerContainerProps> = ({player
         if(game.discardSelected === null) {
             noDiscardSelectedMsg()
         } else {
-            console.log("Confirmed Discard", game.discardSelected);
+            discardCard();
         }
     }
 
+    const showDrawBtn = game.canDraw && game.isTurn
     const showDiscardBtn = !game.willDiscard && !game.canDraw && game.isGameStarted && game.isTurn
-    const showUndoDiscardBtn = game.willDiscard && !game.canDraw
+    const showUndoDiscardBtn = game.willDiscard && !game.canDraw && game.isTurn
 
     return (
         <div className={styles.outerContainer}>
@@ -43,7 +45,7 @@ const PlayerContainer: React.FunctionComponent<IPlayerContainerProps> = ({player
                     <p>Points: {player.points}</p>
                 </div>
             ))}
-            {game.canDraw && <div className={styles.btnContainer}>
+            {showDrawBtn && <div className={styles.btnContainer}>
                 <button onClick={drawCard}>Draw Card</button>
             </div>}
             {showDiscardBtn && <div className={styles.btnContainer}>

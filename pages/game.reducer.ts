@@ -2,6 +2,7 @@ import { IGameContext } from "./game.context"
 import { 
     CLOSE_MESSAGE, 
     COPY_PASSWORD, 
+    DISCARD_CARD, 
     DRAW_CARD,
     GAME_CREATED, 
     GAME_JOINED, 
@@ -41,6 +42,14 @@ const reducer = (state: IGameContext["game"], action: ActionsType): IGameContext
                 timer: 2
             }
         }
+        case DISCARD_CARD:
+            return {
+                ...state,
+                hand: [...action.payload],
+                isTurn: false,
+                willDiscard: false,
+                discardSelected: null
+            }
         case DRAW_CARD:
             return {
                 ...state,

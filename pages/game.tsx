@@ -30,8 +30,9 @@ const Game: NextPage = () => {
             gamePassword,
             gameLoading,
             isGameStarted,
-            isTurn,
+            discardSelected
         },
+        discardCard,
         drawCard,
         gameCreated,
         gameJoined,
@@ -76,6 +77,9 @@ const Game: NextPage = () => {
             const serverData = JSON.parse(ev.data)
             const { data } = serverData
             switch(serverData.event) {
+                case "CARD_DISCARDED":
+                    onCardDiscarded(data)
+                    break;
                 case "CARD_DRAWN":
                     onCardDrawn(data)
                     break;
@@ -101,6 +105,10 @@ const Game: NextPage = () => {
     
     // ********************** STATE UPDATES *******************************
     
+    const onCardDiscarded = (data: string) => {
+        discardCard(JSON.parse(data))
+    }
+
     const onCardDrawn = (data: string) => {
         drawCard(JSON.parse(data))
     }
@@ -139,10 +147,14 @@ const Game: NextPage = () => {
 
     const discardHandler = () => {
         const event = "DISCARD_CARD"
-        // Data needs card position, color, and number
         const data = JSON.stringify({
-            Id: gamePassword
-        })
+            Id: gamePassword,
+            DiscardCard: {
+                Position: discardSelected,
+                Card: hand[discardSelected!]
+            }
+        })        
+        socket?.send(JSON.stringify({event, data}))
     }
     
     const drawCardHandler = () => {
@@ -179,6 +191,7 @@ const Game: NextPage = () => {
                     <div className={styles.gameBoard}>
                         <PlayerContainer 
                             drawCard={drawCardHandler} 
+                            discardCard={discardHandler}
                             players={players}/>
                         <div className={styles.deck}>
                             {hand && hand.map((card, i) => 
