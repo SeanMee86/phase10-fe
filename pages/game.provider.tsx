@@ -1,6 +1,11 @@
 import { ReactNode, useReducer } from "react";
 import reducer from "./game.reducer";
-import { GameContext, GameContextType, GameType, ICard } from "./game.context";
+import { 
+    GameContext, 
+    IGameContext, 
+    GameType, 
+    ICard
+} from "./game.context";
 import {
     GAME_CREATED,
     GAME_JOINED,
@@ -76,7 +81,7 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
         dispatch({type: SUBMIT_FORM, payload})
     }
 
-    const value: GameContextType = {
+    const value: IGameContext = {
         game: state,
         closeMessage,
         copyPassword,

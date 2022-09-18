@@ -1,9 +1,8 @@
 import * as React from 'react';
 import styles from "@styles/ToggleSwitch.module.css"
-import { SyntheticEvent } from 'react';
 
 interface IToggleSwitchProps {
-    onChangeHandler: () => void;
+    onChangeHandler(): void;
     isChecked: boolean
 }
 

@@ -1,9 +1,13 @@
 import * as React from 'react';
+import { 
+  Dispatch, 
+  SetStateAction, 
+  useContext 
+} from 'react';
+import { useRouter } from 'next/router';
 import { ToggleSwitch } from "@components";
 import { GameContext } from 'pages/game.context';
-import { Dispatch, SetStateAction, useContext } from 'react';
 import styles from "@styles/Form.module.css"
-import { useRouter } from 'next/router';
 
 type JoinCreateProps = {
   createGame: boolean;

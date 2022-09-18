@@ -1,7 +1,11 @@
 import * as React from 'react';
-import styles from "@styles/DropDown.module.css"
 import { GameContext } from 'pages/game.context';
-import { useContext, useEffect, useState } from 'react';
+import { 
+    useContext, 
+    useEffect, 
+    useState 
+} from 'react';
+import styles from "@styles/DropDown.module.css"
 
 const DropDown: React.FunctionComponent = () => {
     const {
@@ -23,18 +27,21 @@ const DropDown: React.FunctionComponent = () => {
         copyPassword()
     }
 
-    const [topStyle, setTopStyle] = useState("-110px")
+    const topHide = "-110px",
+          topShow = "60px"
+
+    const [topStyle, setTopStyle] = useState(topHide)
 
     useEffect(() => {
         if (showMessage.show) {
-            setTopStyle("60px")
+            setTopStyle(topShow)
             if(showMessage.timer !== null) {
                 setTimeout(() => {
-                    setTopStyle("-110px")
+                    setTopStyle(topHide)
                 }, showMessage.timer*1000)
             }
         } else {
-            setTopStyle("-110px")
+            setTopStyle(topHide)
         }
     }, [showMessage])
 

@@ -1,8 +1,11 @@
 import * as React from 'react';
-import styles from "@styles/Form.module.css"
-import { SyntheticEvent, useState } from 'react';
 import Input from './input';
 import JoinCreateSelector from './joinCreateSelector';
+import { 
+    SyntheticEvent, 
+    useState 
+} from 'react';
+import styles from "@styles/Form.module.css"
 
 const Form: React.FunctionComponent = () => {
     const [createGame, setCreateGame] = useState<boolean>(true)

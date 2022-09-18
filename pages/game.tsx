@@ -8,11 +8,11 @@ import Layout from "./layout"
 import { 
     Card, 
     IPlayer, 
-    LoadingSpinner 
+    LoadingSpinner,
+    PlayerContainer 
 } from "@components"
 import { GameContext } from "./game.context" 
 import { useRouter } from "next/router"
-import { PlayerContainer } from "@components"
 import styles from "@styles/Game.module.css"
 
 let socket: WebSocket;
@@ -53,6 +53,7 @@ const Game: NextPage = () => {
                 clearInterval(socketInterval)
             }
         }, 1000)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     useEffect(() => {
@@ -61,6 +62,7 @@ const Game: NextPage = () => {
             setHost(false)
             setIsTurn(true)
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isGameStarted])
 
     const socketInitializer = () => {
@@ -169,7 +171,6 @@ const Game: NextPage = () => {
                     <div className={styles.gameBoard}>
                         <PlayerContainer 
                             drawCard={drawCardHandler} 
-                            isTurn={isTurn} 
                             players={players}/>
                         <div className={styles.deck}>
                             {hand && hand.map((card, i) => 

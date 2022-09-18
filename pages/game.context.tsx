@@ -22,21 +22,21 @@ export type GameType = {
     showMessage: {show: boolean; timer: number | null};
 }
 
-export type GameContextType = {
+export interface IGameContext {
     game: GameType;
-    closeMessage: () => void;
-    copyPassword: () => void;
-    drawCard: (hand: ICard[]) => void;
-    inProgressError: (error: string) => void;
-    gameCreated: (pwd: string) => void;
-    gameJoined: (joiner: string) => void;
-    gameStarted: (hand: ICard[]) => void;
-    setIsTurn: (isTurn: boolean) => void;
-    submitForm: (payload: {
+    closeMessage(): void;
+    copyPassword(): void;
+    drawCard(hand: ICard[]): void;
+    inProgressError(error: string): void;
+    gameCreated(pwd: string): void;
+    gameJoined(joiner: string): void;
+    gameStarted(hand: ICard[]): void;
+    setIsTurn(isTurn: boolean): void;
+    submitForm(payload: {
         createGame: boolean;
         playerName: string;
         gamePassword: string;
-    }) => void;
+    }): void;
 }
 
-export const GameContext = createContext<GameContextType>({} as GameContextType)
+export const GameContext = createContext<IGameContext>({} as IGameContext)

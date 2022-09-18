@@ -1,4 +1,4 @@
-import { GameContextType } from "./game.context"
+import { IGameContext } from "./game.context"
 import { 
     CLOSE_MESSAGE, 
     COPY_PASSWORD, 
@@ -16,7 +16,7 @@ type ActionsType = {
     payload?: any
 }
 
-const reducer = (state: GameContextType["game"], action: ActionsType): GameContextType["game"] => {
+const reducer = (state: IGameContext["game"], action: ActionsType): IGameContext["game"] => {
     switch(action.type) {
         case CLOSE_MESSAGE:
             return {
