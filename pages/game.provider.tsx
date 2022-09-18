@@ -5,7 +5,7 @@ import {
     GAME_CREATED,
     GAME_JOINED,
     GAME_STARTED,
-    UPDATE_HAND,
+    DRAW_CARD,
     SET_IS_TURN,
     SUBMIT_FORM,
     CLOSE_MESSAGE,
@@ -16,21 +16,22 @@ import {
 const GameProvider: React.FC<{children: ReactNode}> = (props) => {
 
     const initialState: GameType = {
+        canDraw: false,
         createGame: false,
-        playerName: "",
+        gameLoading: false,
         gamePassword: "",
-        showMessage: {
-            show: false,
-            timer: null
-        },
+        hand: [],
+        isGameStarted: false,
+        isTurn: false,
         message: {
             color: "green",
             copy: ""
         },
-        gameLoading: false,
-        isGameStarted: false,
-        isTurn: false,
-        hand: []
+        playerName: "",
+        showMessage: {
+            show: false,
+            timer: null
+        },
     }
     
     const [state, dispatch] = useReducer(reducer, initialState)
@@ -41,6 +42,10 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
 
     const copyPassword = () => {
         dispatch({type: COPY_PASSWORD})
+    }
+    
+    const drawCard = (hand: ICard[]) => {
+        dispatch({type: DRAW_CARD, payload: hand})
     }
 
     const gameCreated = (password: string) => {
@@ -71,21 +76,17 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
         dispatch({type: SUBMIT_FORM, payload})
     }
 
-    const updateHand = (hand: ICard[]) => {
-        dispatch({type: UPDATE_HAND, payload: hand})
-    }
-
     const value: GameContextType = {
         game: state,
         closeMessage,
         copyPassword,
+        drawCard,
         gameCreated,
         gameJoined,
         gameStarted,
         inProgressError,
         setIsTurn,
         submitForm,
-        updateHand,
     }
 
 

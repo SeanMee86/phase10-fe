@@ -32,12 +32,12 @@ const Game: NextPage = () => {
             isGameStarted,
             isTurn,
         },
+        drawCard,
         gameCreated,
         gameJoined,
         gameStarted,
         inProgressError,
         setIsTurn,
-        updateHand
     } = useContext(GameContext)
 
     useEffect(() => {
@@ -100,7 +100,7 @@ const Game: NextPage = () => {
     // ********************** STATE UPDATES *******************************
     
     const onCardDrawn = (data: string) => {
-        updateHand(JSON.parse(data))
+        drawCard(JSON.parse(data))
     }
 
     const onGameCreated = (data: string) => {

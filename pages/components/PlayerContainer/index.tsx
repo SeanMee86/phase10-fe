@@ -1,5 +1,7 @@
 import * as React from 'react';
 import styles from "@styles/PlayerContainer.module.css"
+import { useContext } from 'react';
+import { GameContext } from 'pages/game.context';
 
 interface IPlayerContainerProps {
     players?: IPlayer[];
@@ -13,6 +15,7 @@ export interface IPlayer {
 }
 
 const PlayerContainer: React.FunctionComponent<IPlayerContainerProps> = ({players, isTurn, drawCard}) => {
+    const { game: { canDraw } } = useContext(GameContext)
   return (
     <div className={styles.outerContainer}>
         {players && players.map(player => (
@@ -21,7 +24,7 @@ const PlayerContainer: React.FunctionComponent<IPlayerContainerProps> = ({player
                 <p>Points: {player.points}</p>
             </div>
         ))}
-        {isTurn && <div className={styles.btnContainer}>
+        {isTurn && canDraw && <div className={styles.btnContainer}>
             <button onClick={drawCard}>Draw Card</button>
         </div>}
     </div>

@@ -2,13 +2,13 @@ import { GameContextType } from "./game.context"
 import { 
     CLOSE_MESSAGE, 
     COPY_PASSWORD, 
+    DRAW_CARD,
     GAME_CREATED, 
     GAME_JOINED, 
     GAME_STARTED, 
     IN_PROGRESS_ERROR, 
     SET_IS_TURN, 
     SUBMIT_FORM, 
-    UPDATE_HAND 
 } from "./game.actions"
 
 type ActionsType = {
@@ -29,14 +29,20 @@ const reducer = (state: GameContextType["game"], action: ActionsType): GameConte
         case COPY_PASSWORD:
             return {
                 ...state,
-                message: {
-                    copy: "Password Copied!",
-                    color: "green"
-                },
-                showMessage: {
-                    ...state.showMessage,
-                    timer: 2
-                }
+            message: {
+                copy: "Password Copied!",
+                color: "green"
+            },
+            showMessage: {
+                ...state.showMessage,
+                timer: 2
+            }
+        }
+        case DRAW_CARD:
+            return {
+                ...state,
+                hand: [...action.payload],
+                canDraw: false
             }
         case GAME_CREATED:
             return {
@@ -50,7 +56,7 @@ const reducer = (state: GameContextType["game"], action: ActionsType): GameConte
                 showMessage: {
                     ...state.showMessage,
                     show: true
-                }
+                },
             }
         case GAME_JOINED:
             return {
@@ -69,7 +75,8 @@ const reducer = (state: GameContextType["game"], action: ActionsType): GameConte
             return {
                 ...state,
                 hand: [...action.payload],
-                isGameStarted: true
+                isGameStarted: true,
+                canDraw: true
             }
         case IN_PROGRESS_ERROR:
             return {
@@ -93,11 +100,6 @@ const reducer = (state: GameContextType["game"], action: ActionsType): GameConte
                 ...state,
                 ...action.payload,
                 gameLoading: true
-            }
-        case UPDATE_HAND:
-            return {
-                ...state,
-                hand: [...action.payload]
             }
         default:
             return state

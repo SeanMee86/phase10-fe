@@ -2,40 +2,41 @@ import { createContext } from "react";
 import { ICardProps } from "@components"
 
 export interface ICard {
-    Number: ICardProps["number"];
     Color: ICardProps["color"];
+    Number: ICardProps["number"];
 }
 
 export type GameType = {
+    canDraw: boolean;
     createGame: boolean;
-    playerName: string;
+    gameLoading: boolean;
     gamePassword?: string;
-    showMessage: {show: boolean; timer: number | null};
+    hand: ICard[]
+    isGameStarted: boolean;
+    isTurn: boolean;
     message: {
         copy: string,
         color: "green" | "red"
     };
-    gameLoading: boolean;
-    isTurn: boolean;
-    isGameStarted: boolean;
-    hand: ICard[]
+    playerName: string;
+    showMessage: {show: boolean; timer: number | null};
 }
 
 export type GameContextType = {
     game: GameType;
+    closeMessage: () => void;
+    copyPassword: () => void;
+    drawCard: (hand: ICard[]) => void;
+    inProgressError: (error: string) => void;
     gameCreated: (pwd: string) => void;
     gameJoined: (joiner: string) => void;
-    setIsTurn: (isTurn: boolean) => void;
     gameStarted: (hand: ICard[]) => void;
-    updateHand: (hand: ICard[]) => void;
+    setIsTurn: (isTurn: boolean) => void;
     submitForm: (payload: {
         createGame: boolean;
         playerName: string;
         gamePassword: string;
     }) => void;
-    closeMessage: () => void;
-    copyPassword: () => void;
-    inProgressError: (error: string) => void;
 }
 
 export const GameContext = createContext<GameContextType>({} as GameContextType)
