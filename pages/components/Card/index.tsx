@@ -11,10 +11,11 @@ import { GameContext } from 'pages/game.context';
 export interface ICardProps {
     number: 1 | 2 | 3 | 4 | 5 | 6 |7 | 8 | 9 | 10 | 11 | 12;
     color: "red" | "yellow" | "blue" | "green";
-    position: number
+    cardId: number;
+    position: number;
 }
 
-const Card: React.FunctionComponent<ICardProps> = ({number, color, position}) => {
+const Card: React.FunctionComponent<ICardProps> = ({number, color, position, id}) => {
 
     const {game, selectDiscard} = useContext(GameContext)
     const [discardable, setDiscardable] = useState<boolean>(false)

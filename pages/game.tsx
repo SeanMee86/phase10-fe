@@ -136,16 +136,16 @@ const Game: NextPage = () => {
         gameJoined(playerArray)
     }
 
+    const onGameStarted = (data: string) => {
+        gameStarted(JSON.parse(data))
+    }
+    
     const onNextPlayerSet = (data: string) => {
         const position = +JSON.parse(data) 
         const currentPlayer = players[position]
         if (currentPlayer.name === playerName) {
             setIsTurn(true)
         }
-    }
-    
-    const onGameStarted = (data: string) => {
-        gameStarted(JSON.parse(data))
     }
     
     const onInProgressError = (data: string) => {
@@ -214,6 +214,7 @@ const Game: NextPage = () => {
                                 <Card 
                                     key={i} 
                                     position={i}
+                                    cardId={card.ID}
                                     number={card.Number} 
                                     color={card.Color} />
                             )}
