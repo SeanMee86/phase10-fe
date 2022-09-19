@@ -21,16 +21,7 @@ const Game: NextPage = () => {
     const router = useRouter()
     const [host, setHost] = useState<boolean>(false)
     const {
-        game: {
-            hand,
-            createGame, 
-            playerName, 
-            gamePassword,
-            gameLoading,
-            isGameStarted,
-            discardSelected,
-            players
-        },
+        game,
         discardCard,
         drawCard,
         gameCreated,
@@ -39,6 +30,17 @@ const Game: NextPage = () => {
         inProgressError,
         setIsTurn,
     } = useContext(GameContext)
+
+    const {
+        hand,
+        createGame, 
+        playerName, 
+        gamePassword,
+        gameLoading,
+        isGameStarted,
+        discardSelected,
+        players
+    } = game
 
     useEffect(() => {
         if(!playerName) {
@@ -65,10 +67,18 @@ const Game: NextPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isGameStarted])
 
+    useEffect(() => {
+        if(!socket) return;
+        socket.addEventListener("message", onSocketMessage)
+        return () => {
+            socket.removeEventListener("message", onSocketMessage)
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [game, socket])
+
     const socketInitializer = () => {
         socket = new WebSocket("ws://localhost:3001")
         socketJoined = true
-        socket.addEventListener("message", onSocketMessage)
     }
 
     const onSocketMessage = (ev: MessageEvent) => {
@@ -95,12 +105,12 @@ const Game: NextPage = () => {
                     onInProgressError(data);
                     break;
                 case "NEXT_PLAYER_SET":
-                    console.log(data)
+                    onNextPlayerSet(data)
                     break;
                 default:
                     console.log("Event not handled")
             }
-        } catch(e) {
+        } catch(e) {            
             console.log(ev)
         }
     }
@@ -124,6 +134,14 @@ const Game: NextPage = () => {
         const playerArray = JSON.parse(data)
         .map((player: string, index: number) => ({name: player, points: 0, position: index}))
         gameJoined(playerArray)
+    }
+
+    const onNextPlayerSet = (data: string) => {
+        const position = +JSON.parse(data) 
+        const currentPlayer = players[position]
+        if (currentPlayer.name === playerName) {
+            setIsTurn(true)
+        }
     }
     
     const onGameStarted = (data: string) => {
