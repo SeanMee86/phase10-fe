@@ -1,3 +1,4 @@
+export const ARRANGE_HAND = "ARRANGE_HAND"
 export const CLOSE_MESSAGE = "CLOSE_MESSAGE"
 export const COPY_PASSWORD = "COPY_PASSWORD"
 export const DISCARD_CARD = "DISCARD_CARD"

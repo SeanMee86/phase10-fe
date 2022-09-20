@@ -7,14 +7,15 @@ import { Card, ICardProps } from '@components';
 interface IDraggableProps {
     id: number;
     card: ICard;
-    onMoveItem(sourceId: number, destinationId: number): void;
     position: number;
+    onMoveItem(sourceId: number, destinationId: number): void;
+    onDropItem(): void;
 }
 
-const Draggable: React.FunctionComponent<IDraggableProps> = ({id, card, onMoveItem, position}) => {
+const DraggableCard: React.FunctionComponent<IDraggableProps> = ({id, card, onMoveItem, position, onDropItem}) => {
   const ref = useRef(null);
   
-  const [{ isDragging }, connectDrag, connectDragPreview] = useDrag({
+  const [{ isDragging }, connectDrag] = useDrag({
       type: "CARD",
       item: { id, type: "CARD" },
       collect: (monitor: any) => {
@@ -25,19 +26,15 @@ const Draggable: React.FunctionComponent<IDraggableProps> = ({id, card, onMoveIt
         }
     });
 
-    React.useEffect(() => {
-        connectDragPreview(ref.current, {
-            anchorX: 0,
-            anchorY: 0
-        })
-    }, [connectDragPreview])
-
   const [, connectDrop] = useDrop({
     accept: "CARD",
     hover(hoveredOverItem: any) {
       if (hoveredOverItem.id !== id) {
         onMoveItem(hoveredOverItem.id, id);
       }
+    },
+    drop() {
+        onDropItem()
     }
   });
 
@@ -48,13 +45,12 @@ const Draggable: React.FunctionComponent<IDraggableProps> = ({id, card, onMoveIt
   const containerStyle = { opacity };
   return (
     <Card
-        forwardedStyle={containerStyle}
-        key={id} 
-        position={position}
-        forwardedRef={ref}
-        number={card.Number as ICardProps["number"]} 
-        color={card.Color as ICardProps["color"]} />
+      color={card.Color as ICardProps["color"]}
+      forwardedStyle={containerStyle}
+      forwardedRef={ref}
+      number={card.Number as ICardProps["number"]} 
+      position={position}/>
   );
 };
 
-export default Draggable;
+export default DraggableCard;

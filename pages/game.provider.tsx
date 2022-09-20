@@ -19,7 +19,8 @@ import {
     SET_WILL_DISCARD,
     NO_DISCARD_SELECTED_MSG,
     SELECT_DISCARD,
-    DISCARD_CARD
+    DISCARD_CARD,
+    ARRANGE_HAND
 } from "./game.actions"
 import { IPlayer } from "./components";
 
@@ -48,6 +49,10 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
     }
     
     const [state, dispatch] = useReducer(reducer, initialState)
+
+    const arrangeHand = (newHand: ICard[]) => {
+        dispatch({type: ARRANGE_HAND, payload: newHand})
+    }
     
     const closeMessage = () => {
         dispatch({type: CLOSE_MESSAGE})
@@ -107,6 +112,7 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
 
     const value: IGameContext = {
         game: state,
+        arrangeHand,
         closeMessage,
         copyPassword,
         discardCard,
