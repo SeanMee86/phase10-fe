@@ -1,5 +1,5 @@
 export { default as Card } from "./Card"
-export { default as Deck } from "./Deck"
+export { default as Hand } from "./Hand"
 export { default as Form } from "./Form"
 export { default as ToggleSwitch } from "./ToggleSwitch"
 export { default as DropDown } from "./DropDown"

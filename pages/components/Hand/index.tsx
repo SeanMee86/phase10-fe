@@ -25,7 +25,7 @@ function move(array: ICard[], oldIndex: number, newIndex: number) {
     return move(array, index, newIndex);
   }
 
-const Deck: React.FunctionComponent<IDeckProps> = ({hand, arrangeHand: socketHandHandler}) => {
+const Hand: React.FunctionComponent<IDeckProps> = ({hand, arrangeHand: socketHandHandler}) => {
 
     const { arrangeHand } = useContext(GameContext)
 
@@ -72,4 +72,4 @@ const Deck: React.FunctionComponent<IDeckProps> = ({hand, arrangeHand: socketHan
   );
 };
 
-export default Deck;
+export default Hand;

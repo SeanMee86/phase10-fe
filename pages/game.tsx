@@ -6,7 +6,7 @@ import {
 } from "react"
 import Layout from "./layout"
 import { 
-    Deck, 
+    Hand, 
     LoadingSpinner,
     PlayerContainer 
 } from "@components"
@@ -222,7 +222,7 @@ const Game: NextPage = () => {
                             drawCard={drawCardHandler} 
                             discardCard={discardHandler}
                             players={players}/>
-                        <Deck 
+                        <Hand 
                             hand={hand} 
                             arrangeHand={arrangeHandHandler}/>
                     </div>
