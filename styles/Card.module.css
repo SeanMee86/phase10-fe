@@ -6,6 +6,7 @@
     border-radius: 4px;
     margin-bottom: 30px;
     margin-left: 20px;
+    box-sizing: border-box;
 }
 
 .cardDecor {

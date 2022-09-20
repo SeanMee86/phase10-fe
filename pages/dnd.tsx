@@ -2,8 +2,11 @@ import { NextPage } from "next"
 import { Card, ICardProps } from "@components";
 import Layout from "./layout";
 import styles from "@styles/Game.module.css"
-import React, { createContext, useState } from "react";
+import React, { useState } from "react";
 import { ICard } from "./game.context";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend"
+import Draggable from "./components/Draggable";
 
 const mockHand: ICard[] = [
     {
@@ -72,64 +75,49 @@ function move(array: ICard[], oldIndex: number, newIndex: number) {
     return move(array, index, newIndex);
   }
 
-const GridContext = createContext({})
-
-const GridProvider: React.FC<{children: React.ReactNode}> = (props) => {
-
-    const setItems = (items: any) => setState({ ...items });
-
-    const moveItem = (sourceId: number, destinationId: number) => {
-        const sourceIndex = state.items.findIndex(
-            (item: { id: any; }) => item.id === sourceId
-        );
-        const destinationIndex = state.items.findIndex(
-            (item: { id: any; }) => item.id === destinationId
-        );
-
-        if (sourceId === -1 || destinationId === -1) {
-            return;
-        }
-
-        const offset = destinationIndex - sourceIndex;
-
-        setState(prevState => {
-            return {
-                ...prevState,
-                items: moveElement(prevState.items, sourceIndex, offset)
-            }
-        });
-    };
-
-    const [state, setState] = useState({
-        items: mockHand,
-        moveItem,
-        setItems
-    })
-
-
-    return (
-        <GridContext.Provider value={}>
-            {props.children}
-        </GridContext.Provider>
-    )
-}
-
 
 const DND: NextPage = () => {
 
+    const moveItem = (sourceId: number, destinationId: number) => {
+        const sourceIndex = state.cards.findIndex(
+          item => item.ID === sourceId
+        );
+        const destinationIndex = state.cards.findIndex(
+          item => item.ID === destinationId
+        );
+    
+        // If source/destination is unknown, do nothing.
+        if (sourceId === -1 || destinationId === -1) {
+          return;
+        }
+    
+        const offset = destinationIndex - sourceIndex;
+
+        const newHand = moveElement(state.cards, sourceIndex, offset)
+
+        console.log(newHand);
+        
+    
+        setState(prevState => ({
+          ...prevState,
+          cards: [...newHand]
+        }));
+      };
+
+    const [state, setState] = useState<{cards: ICard[], [key: string]: any}>({
+        cards: [...mockHand],
+        moveItem
+    })
+
     return (
         <Layout>
-            <GridProvider>
+            <DndProvider backend={HTML5Backend}>
                 <div className={styles.deck}>
-                        {mockHand.map((card, i) => 
-                            <Card 
-                                key={i} 
-                                position={i}
-                                number={card.Number as ICardProps["number"]} 
-                                color={card.Color as ICardProps["color"]} />
+                        {state.cards.map((card, i) => 
+                            <Draggable key={card.ID} id={card.ID} card={card} onMoveItem={moveItem} position={i}/>
                         )}
                 </div>
-            </GridProvider>
+            </DndProvider>
         </Layout>
     )
 }

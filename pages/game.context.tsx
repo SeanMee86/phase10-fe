@@ -4,7 +4,7 @@ import { ICardProps, IPlayer } from "@components"
 export interface ICard {
     Color: ICardProps["color"];
     Number: ICardProps["number"];
-    ID: ICardProps["id"]
+    ID: ICardProps["ID"]
 }
 
 export type GameType = {
