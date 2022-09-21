@@ -3,7 +3,8 @@ import styles from "@styles/Card.module.css"
 import { 
     useContext, 
     useState, 
-    useEffect 
+    useEffect, 
+    Ref
 } from 'react';
 import { GameContext } from 'pages/game.context';
 
@@ -11,10 +12,12 @@ import { GameContext } from 'pages/game.context';
 export interface ICardProps {
     number: 1 | 2 | 3 | 4 | 5 | 6 |7 | 8 | 9 | 10 | 11 | 12;
     color: "red" | "yellow" | "blue" | "green";
-    position: number
+    position: number;
+    forwardedRef: Ref<HTMLDivElement>;
+    forwardedStyle: any;
 }
 
-const Card: React.FunctionComponent<ICardProps> = ({number, color, position}) => {
+const Card: React.FunctionComponent<ICardProps> = ({number, color, position, forwardedRef, forwardedStyle}) => {
 
     const {game, selectDiscard} = useContext(GameContext)
     const [discardable, setDiscardable] = useState<boolean>(false)
@@ -39,8 +42,9 @@ const Card: React.FunctionComponent<ICardProps> = ({number, color, position}) =>
     const discardStyle = discardable && {borderColor: "red"}
     return (
         <div 
+            ref={forwardedRef}
             className={styles.card} 
-            style={{color, ...(discardStyle)}}
+            style={{color, ...(forwardedStyle), ...(discardStyle)}}
             onClick={game.willDiscard ? onSelectDiscard : onSelect}>
             <div className={styles.inner}>
                 <div

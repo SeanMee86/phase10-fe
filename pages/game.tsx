@@ -6,11 +6,11 @@ import {
 } from "react"
 import Layout from "./layout"
 import { 
-    Card, 
+    Hand, 
     LoadingSpinner,
     PlayerContainer 
 } from "@components"
-import { GameContext } from "./game.context" 
+import { GameContext, ICard } from "./game.context" 
 import { useRouter } from "next/router"
 import styles from "@styles/Game.module.css"
 
@@ -22,6 +22,7 @@ const Game: NextPage = () => {
     const [host, setHost] = useState<boolean>(false)
     const {
         game,
+        arrangeHand,
         discardCard,
         drawCard,
         gameCreated,
@@ -101,6 +102,9 @@ const Game: NextPage = () => {
                 case "GAME_STARTED":
                     onGameStarted(data)
                     break;
+                case "HAND_ARRANGED":
+                    onHandArranged(data)
+                    break;
                 case "ERR_GAME_IN_PROGRESS":
                     onInProgressError(data);
                     break;
@@ -116,6 +120,10 @@ const Game: NextPage = () => {
     }
     
     // ********************** STATE UPDATES *******************************
+
+    const onHandArranged = (data: string) => {
+        arrangeHand(JSON.parse(data))
+    }
     
     const onCardDiscarded = (data: string) => {
         discardCard(JSON.parse(data))
@@ -136,6 +144,10 @@ const Game: NextPage = () => {
         gameJoined(playerArray)
     }
 
+    const onGameStarted = (data: string) => {
+        gameStarted(JSON.parse(data))
+    }
+    
     const onNextPlayerSet = (data: string) => {
         const position = +JSON.parse(data) 
         const currentPlayer = players[position]
@@ -144,16 +156,21 @@ const Game: NextPage = () => {
         }
     }
     
-    const onGameStarted = (data: string) => {
-        gameStarted(JSON.parse(data))
-    }
-    
     const onInProgressError = (data: string) => {
         inProgressError(JSON.parse(data).error)
         router.push("/")
     }
 
     // ****************** SOCKET EVENTS **********************
+
+    const arrangeHandHandler = (newHand: ICard[]) => {
+        const event = "ARRANGE_HAND"
+        const data = JSON.stringify({
+            Hand: newHand,
+            Id: gamePassword
+        })
+        socket?.send(JSON.stringify({event, data}))
+    }
 
     const createGameHandler = () => {
         const event = "CREATE_GAME"
@@ -209,15 +226,9 @@ const Game: NextPage = () => {
                             drawCard={drawCardHandler} 
                             discardCard={discardHandler}
                             players={players}/>
-                        <div className={styles.deck}>
-                            {hand && hand.map((card, i) => 
-                                <Card 
-                                    key={i} 
-                                    position={i}
-                                    number={card.Number} 
-                                    color={card.Color} />
-                            )}
-                        </div>
+                        <Hand 
+                            hand={hand} 
+                            arrangeHand={arrangeHandHandler}/>
                     </div>
                 </>
             }

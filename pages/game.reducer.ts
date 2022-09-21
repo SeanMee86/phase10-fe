@@ -1,5 +1,6 @@
 import { IGameContext } from "./game.context"
 import { 
+    ARRANGE_HAND,
     CLOSE_MESSAGE, 
     COPY_PASSWORD, 
     DISCARD_CARD, 
@@ -22,6 +23,11 @@ type ActionsType = {
 
 const reducer = (state: IGameContext["game"], action: ActionsType): IGameContext["game"] => {
     switch(action.type) {
+        case ARRANGE_HAND:
+            return {
+                ...state,
+                hand: [...action.payload]
+            }
         case CLOSE_MESSAGE:
             return {
                 ...state,
