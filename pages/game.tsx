@@ -30,7 +30,7 @@ const Game: NextPage = () => {
         gameJoined,
         gameStarted,
         inProgressError,
-        setIsTurn,
+        setCurrentPlayer,
     } = useContext(GameContext)
 
     const {
@@ -64,7 +64,7 @@ const Game: NextPage = () => {
         if(!isGameStarted) return;
         if(host) {
             setHost(false)
-            setIsTurn(true)
+            setCurrentPlayer(0)
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isGameStarted])
@@ -159,10 +159,7 @@ const Game: NextPage = () => {
     
     const onNextPlayerSet = (data: string) => {
         const position = +JSON.parse(data) 
-        const currentPlayer = players[position]
-        if (currentPlayer.name === playerName) {
-            setIsTurn(true)
-        }
+        setCurrentPlayer(position)
     }
     
     const onInProgressError = (data: string) => {

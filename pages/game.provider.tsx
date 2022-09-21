@@ -11,7 +11,6 @@ import {
     GAME_JOINED,
     GAME_STARTED,
     DRAW_CARD,
-    SET_IS_TURN,
     SUBMIT_FORM,
     CLOSE_MESSAGE,
     COPY_PASSWORD,
@@ -21,7 +20,8 @@ import {
     SELECT_DISCARD,
     DISCARD_CARD,
     ARRANGE_HAND,
-    DISPLAY_INVALID_ERR
+    DISPLAY_INVALID_ERR,
+    SET_CURRENT_PLAYER
 } from "./game.actions"
 import { IPlayer } from "./components";
 
@@ -30,6 +30,7 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
     const initialState: GameType = {
         canDraw: false,
         createGame: false,
+        currentPlayer: 0,
         discardSelected: null,
         gameLoading: false,
         gamePassword: "",
@@ -99,8 +100,8 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
         dispatch({type: SELECT_DISCARD, payload: cardIdx})
     }
 
-    const setIsTurn = (isTurn: boolean) => {
-        dispatch({type: SET_IS_TURN, payload: isTurn})
+    const setCurrentPlayer = (payload: number) => {
+        dispatch({type: SET_CURRENT_PLAYER, payload})
     }
 
     const setWillDiscard = (willDiscard: boolean) => {
@@ -129,7 +130,7 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
         inProgressError,
         noDiscardSelectedMsg,
         selectDiscard,
-        setIsTurn,
+        setCurrentPlayer,
         setWillDiscard,
         submitForm,
     }

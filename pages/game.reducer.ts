@@ -12,7 +12,7 @@ import {
     IN_PROGRESS_ERROR, 
     NO_DISCARD_SELECTED_MSG, 
     SELECT_DISCARD, 
-    SET_IS_TURN, 
+    SET_CURRENT_PLAYER, 
     SET_WILL_DISCARD,
     SUBMIT_FORM, 
 } from "./game.actions"
@@ -141,11 +141,13 @@ const reducer = (state: IGameContext["game"], action: ActionsType): IGameContext
                 ...state,
                 discardSelected: action.payload
             }
-        case SET_IS_TURN:
+        case SET_CURRENT_PLAYER:
+            const isTurn = state.players[action.payload].name === state.playerName
             return {
                 ...state,
-                isTurn: action.payload,
-                canDraw: action.payload
+                isTurn,
+                canDraw: isTurn,
+                currentPlayer: action.payload
             }
         case SET_WILL_DISCARD:
             return {
