@@ -4,6 +4,7 @@ import {
     CLOSE_MESSAGE, 
     COPY_PASSWORD, 
     DISCARD_CARD, 
+    DISPLAY_INVALID_ERR, 
     DRAW_CARD,
     GAME_CREATED, 
     GAME_JOINED, 
@@ -55,6 +56,18 @@ const reducer = (state: IGameContext["game"], action: ActionsType): IGameContext
                 isTurn: false,
                 willDiscard: false,
                 discardSelected: null
+            }
+        case DISPLAY_INVALID_ERR:
+            return {
+                ...state,
+                message: {
+                    color: "red",
+                    copy: "No funny business please, hand resetting..."
+                },
+                showMessage: {
+                    show: true,
+                    timer: 3
+                }
             }
         case DRAW_CARD:
             return {

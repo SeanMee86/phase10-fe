@@ -24,6 +24,7 @@ const Game: NextPage = () => {
         game,
         arrangeHand,
         discardCard,
+        displayInvalidErr,
         drawCard,
         gameCreated,
         gameJoined,
@@ -105,6 +106,9 @@ const Game: NextPage = () => {
                 case "HAND_ARRANGED":
                     onHandArranged(data)
                     break;
+                case "INVALID_HAND":
+                    onInvalidHand(data)
+                    break;
                 case "ERR_GAME_IN_PROGRESS":
                     onInProgressError(data);
                     break;
@@ -146,6 +150,11 @@ const Game: NextPage = () => {
 
     const onGameStarted = (data: string) => {
         gameStarted(JSON.parse(data))
+    }
+
+    const onInvalidHand = (data: string) => {
+        arrangeHand(JSON.parse(data))
+        displayInvalidErr()
     }
     
     const onNextPlayerSet = (data: string) => {

@@ -32,6 +32,7 @@ export interface IGameContext {
     closeMessage(): void;
     copyPassword(): void;
     discardCard(hand: ICard[]): void;
+    displayInvalidErr(): void;
     drawCard(hand: ICard[]): void;
     gameCreated(payload: {password: string; name: string}): void;
     gameJoined(payload: IPlayer[]): void;

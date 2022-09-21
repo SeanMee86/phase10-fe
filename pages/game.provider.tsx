@@ -20,7 +20,8 @@ import {
     NO_DISCARD_SELECTED_MSG,
     SELECT_DISCARD,
     DISCARD_CARD,
-    ARRANGE_HAND
+    ARRANGE_HAND,
+    DISPLAY_INVALID_ERR
 } from "./game.actions"
 import { IPlayer } from "./components";
 
@@ -64,6 +65,10 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
 
     const discardCard = (hand: ICard[]) => {
         dispatch({type: DISCARD_CARD, payload: hand})
+    }
+
+    const displayInvalidErr = () => {
+        dispatch({type: DISPLAY_INVALID_ERR})
     }
     
     const drawCard = (hand: ICard[]) => {
@@ -116,6 +121,7 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
         closeMessage,
         copyPassword,
         discardCard,
+        displayInvalidErr,
         drawCard,
         gameCreated,
         gameJoined,
