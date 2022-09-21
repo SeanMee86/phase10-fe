@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useContext } from 'react';
 import { GameContext } from 'pages/game.context';
 import styles from "@styles/PlayerContainer.module.css"
+import { PenguinSprite } from '@components';
 
 interface IPlayerContainerProps {
     players?: IPlayer[];
@@ -40,23 +41,33 @@ const PlayerContainer: React.FunctionComponent<IPlayerContainerProps> = ({player
     const discardStyles = `${styles.btnContainer} ${styles.discardBtn}`
     const goBackStyles = `${styles.btnContainer} ${styles.goBackBtn}`
     const currentPlayerStyle = {
-        backgroundColor: "green",
-        color: "white"
+        backgroundColor: "rgba(120, 120, 120, 0.1)",
     }
 
-    const setCurrentPlayerStyle = (i: number) => {
-        return game.currentPlayer === i ? currentPlayerStyle : undefined
+    const spriteStyle: React.CSSProperties = {
+        position: "absolute",
+        top: "2px",
+        right: "10px"
+    }
+
+    const isCurrentPlayer = (i: number): boolean => {
+        return game.currentPlayer === i
     }
 
     return (
         <div className={styles.outerContainer}>
             {players && players.map((player, i) => (
-                <div 
-                    key={player.name} 
-                    style={setCurrentPlayerStyle(i)} 
-                    className={styles.innerContainer}>
-                    <p>Player: {player.name}</p>
-                    <p>Points: {player.points}</p>
+                <div>
+                    <div 
+                        key={player.name} 
+                        style={isCurrentPlayer(i) ? currentPlayerStyle : undefined} 
+                        className={styles.innerContainer}>
+                        <p>Player: {player.name}</p>
+                        <p>Points: {player.points}</p>
+                        {isCurrentPlayer(i) && <div style={spriteStyle}>
+                            <PenguinSprite />
+                        </div>}
+                    </div>
                 </div>
             ))}
             {showDrawBtn && <div className={styles.btnContainer}>
