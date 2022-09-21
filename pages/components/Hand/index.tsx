@@ -6,7 +6,7 @@ import styles from "@styles/Game.module.css"
 import { GameContext, ICard } from 'pages/game.context';
 import { useContext } from 'react';
 
-interface IDeckProps {
+interface IHandProps {
     hand: ICard[];
     arrangeHand(newHand: ICard[]): void;
 }
@@ -25,7 +25,7 @@ function move(array: ICard[], oldIndex: number, newIndex: number) {
     return move(array, index, newIndex);
   }
 
-const Hand: React.FunctionComponent<IDeckProps> = ({hand, arrangeHand: socketHandHandler}) => {
+const Hand: React.FunctionComponent<IHandProps> = ({hand, arrangeHand: socketHandHandler}) => {
 
     const { arrangeHand } = useContext(GameContext)
 
