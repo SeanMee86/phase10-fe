@@ -4,7 +4,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DraggableCard } from '@components';
 import styles from "@styles/Game.module.css"
 import { GameContext, ICard } from 'pages/game.context';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 
 interface IDeckProps {
     hand: ICard[];

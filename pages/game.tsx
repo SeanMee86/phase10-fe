@@ -104,6 +104,7 @@ const Game: NextPage = () => {
                     break;
                 case "HAND_ARRANGED":
                     onHandArranged(data)
+                    break;
                 case "ERR_GAME_IN_PROGRESS":
                     onInProgressError(data);
                     break;
@@ -164,7 +165,10 @@ const Game: NextPage = () => {
 
     const arrangeHandHandler = (newHand: ICard[]) => {
         const event = "ARRANGE_HAND"
-        const data = JSON.stringify(newHand)
+        const data = JSON.stringify({
+            Hand: newHand,
+            Id: gamePassword
+        })
         socket?.send(JSON.stringify({event, data}))
     }
 
