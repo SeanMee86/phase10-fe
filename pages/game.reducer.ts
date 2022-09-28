@@ -11,6 +11,7 @@ import {
     GAME_STARTED, 
     IN_PROGRESS_ERROR, 
     NO_DISCARD_SELECTED_MSG, 
+    REJOIN_MESSAGE, 
     SELECT_DISCARD, 
     SET_CURRENT_PLAYER, 
     SET_WILL_DISCARD,
@@ -33,8 +34,9 @@ const reducer = (state: IGameContext["game"], action: ActionsType): IGameContext
             return {
                 ...state,
                 showMessage: {
+                    ...state.showMessage,
                     timer: null,
-                    show: false
+                    show: false,
                 }
             }
         case COPY_PASSWORD:
@@ -66,7 +68,8 @@ const reducer = (state: IGameContext["game"], action: ActionsType): IGameContext
                 },
                 showMessage: {
                     show: true,
-                    timer: 3
+                    timer: 3,
+                    isRejoin: false
                 }
             }
         case DRAW_CARD:
@@ -87,6 +90,7 @@ const reducer = (state: IGameContext["game"], action: ActionsType): IGameContext
                 },
                 showMessage: {
                     ...state.showMessage,
+                    isRejoin: false,
                     show: true
                 },
                 players: [...state.players, newPlayer]
@@ -101,7 +105,8 @@ const reducer = (state: IGameContext["game"], action: ActionsType): IGameContext
                 },
                 showMessage: {
                     show: true, 
-                    timer: 2
+                    timer: 2,
+                    isRejoin: false
                 },
                 gameLoading: false,
                 players: [...action.payload]
@@ -121,7 +126,8 @@ const reducer = (state: IGameContext["game"], action: ActionsType): IGameContext
                 },
                 showMessage: {
                     show: true,
-                    timer: 4
+                    timer: 4,
+                    isRejoin: false
                 }
             }
         case NO_DISCARD_SELECTED_MSG:
@@ -133,7 +139,21 @@ const reducer = (state: IGameContext["game"], action: ActionsType): IGameContext
                 },
                 showMessage: {
                     show: true,
-                    timer: 3
+                    timer: 3,
+                    isRejoin: false
+                }
+            }
+        case REJOIN_MESSAGE:
+            return {
+                ...state,
+                message: {
+                    color: "green",
+                    copy: `Would you like to rejoin your last game?`,
+                },
+                showMessage: {
+                    show: true,
+                    timer: null,
+                    isRejoin: true
                 }
             }
         case SELECT_DISCARD:
@@ -159,7 +179,8 @@ const reducer = (state: IGameContext["game"], action: ActionsType): IGameContext
             return {
                 ...state,
                 ...action.payload,
-                gameLoading: true
+                gameLoading: true,
+                isRejoin: action.payload.isRejoin || false
             }
         default:
             return state

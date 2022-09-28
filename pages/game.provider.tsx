@@ -1,4 +1,4 @@
-import { ReactNode, useReducer } from "react";
+import React, { ReactNode, useReducer } from "react";
 import reducer from "./game.reducer";
 import { 
     GameContext, 
@@ -21,7 +21,9 @@ import {
     DISCARD_CARD,
     ARRANGE_HAND,
     DISPLAY_INVALID_ERR,
-    SET_CURRENT_PLAYER
+    SET_CURRENT_PLAYER,
+    REJOIN_GAME,
+    REJOIN_MESSAGE
 } from "./game.actions"
 import { IPlayer } from "./components";
 
@@ -36,6 +38,7 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
         gamePassword: "",
         hand: [],
         isGameStarted: false,
+        isRejoin: false,
         isTurn: false,
         message: {
             color: "green",
@@ -45,7 +48,8 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
         players: [],
         showMessage: {
             show: false,
-            timer: null
+            timer: null,
+            isRejoin: false
         },
         willDiscard: false
     }
@@ -77,6 +81,7 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
     }
 
     const gameCreated = (payload: {password: string; name: string;}) => {
+        localStorage.setItem("p10Pass", payload.password)
         dispatch({type: GAME_CREATED, payload})
     }
 
@@ -96,6 +101,14 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
         dispatch({type: NO_DISCARD_SELECTED_MSG})
     }
 
+    const rejoinGame = (payload: GameType) => {
+        dispatch({type: REJOIN_GAME, payload})
+    }
+
+    const rejoinMessage = () => {
+        dispatch({type: REJOIN_MESSAGE})
+    }
+
     const selectDiscard = (cardIdx: number) => {
         dispatch({type: SELECT_DISCARD, payload: cardIdx})
     }
@@ -112,7 +125,10 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
         createGame: boolean;
         gamePassword: string;
         playerName: string;
+        isRejoin?: boolean;
     }) => {
+        localStorage.setItem("p10Pass", payload.gamePassword)
+        localStorage.setItem("p10Player", payload.playerName)
         dispatch({type: SUBMIT_FORM, payload})
     }
 
@@ -129,6 +145,8 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
         gameStarted,
         inProgressError,
         noDiscardSelectedMsg,
+        rejoinGame,
+        rejoinMessage,
         selectDiscard,
         setCurrentPlayer,
         setWillDiscard,

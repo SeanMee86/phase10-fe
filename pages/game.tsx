@@ -36,6 +36,7 @@ const Game: NextPage = () => {
     const {
         hand,
         createGame, 
+        isRejoin,
         playerName, 
         gamePassword,
         gameLoading,
@@ -208,7 +209,8 @@ const Game: NextPage = () => {
         const event = "JOIN_GAME"
         const data = JSON.stringify({
             name: playerName, 
-            gameId: gamePassword
+            gameId: gamePassword,
+            isRejoin
         })
         socket?.send(JSON.stringify({event, data}))
     }

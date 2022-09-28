@@ -6,8 +6,12 @@ import {
     useState 
 } from 'react';
 import styles from "@styles/DropDown.module.css"
+import { useRouter } from 'next/router';
 
 const DropDown: React.FunctionComponent = () => {
+
+    const router = useRouter()
+
     const {
         game: {
             showMessage, 
@@ -15,7 +19,9 @@ const DropDown: React.FunctionComponent = () => {
             gamePassword
         },
         copyPassword,
-        closeMessage
+        closeMessage,
+        rejoinMessage,
+        submitForm
     } = useContext(GameContext)
 
     const onClickHandler = () => {
@@ -26,6 +32,31 @@ const DropDown: React.FunctionComponent = () => {
         navigator.clipboard.writeText(gamePassword as string)
         copyPassword()
     }
+
+    const onConfirmHandler = () => {
+        const pass = localStorage.getItem("p10Pass");
+        const uName = localStorage.getItem("p10Player");
+        submitForm({
+            createGame: false, 
+            playerName: uName!, 
+            gamePassword: pass!, 
+            isRejoin: true
+        });
+        router.push("/game")
+    }
+
+    const onDeclineHandler = () => {
+        localStorage.clear()
+        closeMessage()
+    }
+
+    const confirmBtn = (
+        <button onClick={onConfirmHandler}>Yes</button>
+    )
+  
+    const declineBtn = (
+        <button onClick={onDeclineHandler}>No</button>
+    )
 
     const topHide = "-110px",
           topShow = "60px"
@@ -52,11 +83,13 @@ const DropDown: React.FunctionComponent = () => {
                 border: `1px solid ${message.color}`, 
                 top: topStyle
             }}>
-            {showMessage.timer === null && 
-                <button onClick={onClickHandler}>&#10006;</button>}
+            {showMessage.timer === null && !showMessage.isRejoin &&
+                <button className={styles.closeButton} onClick={onClickHandler}>&#10006;</button>}
             {message.copy}
-            {showMessage.timer === null &&
+            {showMessage.timer === null && !showMessage.isRejoin &&
                 <p className={styles.copy} onClick={onCopyPassword}>Click To Copy Password</p>}
+            {showMessage.timer === null && showMessage.isRejoin &&
+                <div className={styles.rejoinBtns}>{confirmBtn} {declineBtn}</div>}
         </div>
     );
 }
