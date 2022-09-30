@@ -23,7 +23,8 @@ import {
     DISPLAY_INVALID_ERR,
     SET_CURRENT_PLAYER,
     REJOIN_GAME,
-    REJOIN_MESSAGE
+    REJOIN_MESSAGE,
+    PLAYER_DISCONNECT
 } from "./game.actions"
 import { IPlayer } from "./components";
 
@@ -101,6 +102,10 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
         dispatch({type: NO_DISCARD_SELECTED_MSG})
     }
 
+    const playerDisconnect = (payload: {newPlayers: IPlayer[], lostPlayer: string}) => {
+        dispatch({type: PLAYER_DISCONNECT, payload})
+    }
+
     const rejoinGame = (payload: GameType) => {
         dispatch({type: REJOIN_GAME, payload})
     }
@@ -145,6 +150,7 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
         gameStarted,
         inProgressError,
         noDiscardSelectedMsg,
+        playerDisconnect,
         rejoinGame,
         rejoinMessage,
         selectDiscard,

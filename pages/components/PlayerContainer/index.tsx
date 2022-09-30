@@ -57,9 +57,8 @@ const PlayerContainer: React.FunctionComponent<IPlayerContainerProps> = ({player
     return (
         <div className={styles.outerContainer}>
             {players && players.map((player, i) => (
-                <div>
+                <div key={player.name}>
                     <div 
-                        key={player.name} 
                         style={isCurrentPlayer(i) ? currentPlayerStyle : undefined} 
                         className={styles.innerContainer}>
                         <p>Player: {player.name}</p>

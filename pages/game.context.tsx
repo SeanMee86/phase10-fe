@@ -1,4 +1,4 @@
-import React, { createContext } from "react";
+import { createContext } from "react";
 import { ICardProps, IPlayer } from "@components"
 
 export interface ICard {
@@ -45,6 +45,10 @@ export interface IGameContext {
     gameStarted(hand: ICard[]): void;
     inProgressError(error: string): void;
     noDiscardSelectedMsg(): void;
+    playerDisconnect(payload: {
+        newPlayers: IPlayer[],
+        lostPlayer: string
+    }): void;
     rejoinGame(game: GameType): void;
     rejoinMessage(): void;
     selectDiscard(card: number): void;

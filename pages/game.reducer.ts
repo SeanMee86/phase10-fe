@@ -11,6 +11,7 @@ import {
     GAME_STARTED, 
     IN_PROGRESS_ERROR, 
     NO_DISCARD_SELECTED_MSG, 
+    PLAYER_DISCONNECT, 
     REJOIN_MESSAGE, 
     SELECT_DISCARD, 
     SET_CURRENT_PLAYER, 
@@ -142,6 +143,20 @@ const reducer = (state: IGameContext["game"], action: ActionsType): IGameContext
                     timer: 3,
                     isRejoin: false
                 }
+            }
+        case PLAYER_DISCONNECT:         
+            return {
+                ...state,
+                message: {
+                    color: "red",
+                    copy: `${action.payload.lostPlayer} has disconnected, waiting for reconnect...`
+                },
+                showMessage: {
+                    show: true,
+                    timer: 3,
+                    isRejoin: false
+                },
+                players: [...action.payload.newPlayers]
             }
         case REJOIN_MESSAGE:
             return {

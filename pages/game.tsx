@@ -30,6 +30,7 @@ const Game: NextPage = () => {
         gameJoined,
         gameStarted,
         inProgressError,
+        playerDisconnect,
         setCurrentPlayer,
     } = useContext(GameContext)
 
@@ -116,6 +117,9 @@ const Game: NextPage = () => {
                 case "NEXT_PLAYER_SET":
                     onNextPlayerSet(data)
                     break;
+                case "PLAYER_DISCONNECT":
+                    onPlayerDisconnect(data)
+                    break;
                 default:
                     console.log("Event not handled")
             }
@@ -166,6 +170,20 @@ const Game: NextPage = () => {
     const onInProgressError = (data: string) => {
         inProgressError(JSON.parse(data).error)
         router.push("/")
+    }
+
+    const onPlayerDisconnect = (data: string) => {
+        const updatedPlayers = JSON.parse(data)
+        const lostPlayer = players.find(player => {
+            return !updatedPlayers.includes(player.name)
+        })
+        const newPlayers = players.filter(player => {
+            return player.name !== lostPlayer?.name
+        }) 
+        playerDisconnect({
+            newPlayers,
+            lostPlayer: lostPlayer!.name
+        })
     }
 
     // ****************** SOCKET EVENTS **********************
