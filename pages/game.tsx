@@ -120,6 +120,9 @@ const Game: NextPage = () => {
                 case "PLAYER_DISCONNECT":
                     onPlayerDisconnect(data)
                     break;
+                case "REJOINED_GAME":
+                    console.log(data);
+                    break;
                 default:
                     console.log("Event not handled")
             }
@@ -148,9 +151,7 @@ const Game: NextPage = () => {
     } 
     
     const onGameJoined = (data: string) => {
-        const playerArray = JSON.parse(data)
-        .map((player: string, index: number) => ({name: player, points: 0, position: index}))
-        gameJoined(playerArray)
+        gameJoined(JSON.parse(data))
     }
 
     const onGameStarted = (data: string) => {

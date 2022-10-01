@@ -20,7 +20,6 @@ const DropDown: React.FunctionComponent = () => {
         },
         copyPassword,
         closeMessage,
-        rejoinMessage,
         submitForm
     } = useContext(GameContext)
 
@@ -34,15 +33,18 @@ const DropDown: React.FunctionComponent = () => {
     }
 
     const onConfirmHandler = () => {
-        const pass = localStorage.getItem("p10Pass");
-        const uName = localStorage.getItem("p10Player");
-        submitForm({
-            createGame: false, 
-            playerName: uName!, 
-            gamePassword: pass!, 
-            isRejoin: true
-        });
-        router.push("/game")
+        closeMessage()
+        setTimeout(() => {
+            const pass = localStorage.getItem("p10Pass");
+            const uName = localStorage.getItem("p10Player");
+            submitForm({
+                createGame: false, 
+                playerName: uName!, 
+                gamePassword: pass!, 
+                isRejoin: true
+            });
+            router.push("/game")
+        }, 700)
     }
 
     const onDeclineHandler = () => {
