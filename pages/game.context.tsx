@@ -43,9 +43,15 @@ export interface IGameContext {
     discardCard(hand: ICard[]): void;
     displayInvalidErr(): void;
     drawCard(hand: ICard[]): void;
-    gameCreated(payload: {password: string; name: string}): void;
-    gameJoined(payload: IPlayer[]): void;
-    gameRejoined(payload: IPlayer[]): void;
+    gameCreated(payload: {password: string; newPlayer: IPlayer}): void;
+    gameJoined(payload: {
+        updatedPlayers: IPlayer[];
+        newPlayerName: string
+    }): void;
+    gameRejoined(payload: {
+        updatedPlayers: IPlayer[],
+        rejoinedPlayerName: string
+    }): void;
     gameStarted(hand: ICard[]): void;
     inProgressError(error: string): void;
     noDiscardSelectedMsg(): void;
@@ -56,7 +62,10 @@ export interface IGameContext {
     rejoinGame(game: GameType): void;
     rejoinMessage(): void;
     selectDiscard(card: number): void;
-    setCurrentPlayer(currentPlayer: GameType["currentPlayer"]): void;
+    setCurrentPlayer(payload: {
+        currentPlayer: GameType["currentPlayer"],
+        isTurn: boolean
+    }): void;
     setWillDiscard(willDiscard: boolean): void;
     submitForm(payload: {
         createGame: boolean;

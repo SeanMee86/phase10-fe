@@ -1,4 +1,4 @@
-import React, { ReactNode, useReducer } from "react";
+import { ReactNode, useReducer } from "react";
 import reducer from "./game.reducer";
 import { 
     GameContext, 
@@ -85,16 +85,21 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
         dispatch({type: DRAW_CARD, payload: hand})
     }
 
-    const gameCreated = (payload: {password: string; name: string;}) => {
-        localStorage.setItem("p10Pass", payload.password)
+    const gameCreated = (payload: {password: string; newPlayer: IPlayer;}) => {
         dispatch({type: GAME_CREATED, payload})
     }
 
-    const gameJoined = (payload: IPlayer[]) => {
+    const gameJoined = (payload: {
+        updatedPlayers: IPlayer[],
+        newPlayerName: string
+    }) => {
         dispatch({type: GAME_JOINED, payload})   
     }
 
-    const gameRejoined = (payload: IPlayer[]) => {
+    const gameRejoined = (payload: {
+        updatedPlayers: IPlayer[],
+        rejoinedPlayerName: string
+    }) => {
         dispatch({type: GAME_REJOINED, payload})
     }
     
@@ -126,7 +131,10 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
         dispatch({type: SELECT_DISCARD, payload: cardIdx})
     }
 
-    const setCurrentPlayer = (payload: GameType["currentPlayer"]) => {
+    const setCurrentPlayer = (payload: {
+        currentPlayer: GameType["currentPlayer"],
+        isTurn: boolean
+    }) => {
         dispatch({type: SET_CURRENT_PLAYER, payload})
     }
 
@@ -140,8 +148,6 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
         playerName: string;
         isRejoin?: boolean;
     }) => {
-        localStorage.setItem("p10Pass", payload.gamePassword)
-        localStorage.setItem("p10Player", payload.playerName)
         dispatch({type: SUBMIT_FORM, payload})
     }
 

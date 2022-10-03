@@ -34,6 +34,8 @@ const JoinCreateSelector: React.FunctionComponent<JoinCreateProps> = ({
   }
 
   const onClickHandler = () => {
+    localStorage.setItem("p10Pass", gamePassword)
+    localStorage.setItem("p10Player", playerName)
     submitForm({createGame, gamePassword, playerName})
     router.push("/game")
   }

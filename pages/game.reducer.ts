@@ -83,7 +83,6 @@ const reducer = (state: IGameContext["game"], action: ActionsType): IGameContext
                 canDraw: false
             }
         case GAME_CREATED:
-            const newPlayer = { name: action.payload.name, points: 0, position: state.players.length }
             return {
                 ...state,
                 gamePassword: action.payload.password,
@@ -97,14 +96,13 @@ const reducer = (state: IGameContext["game"], action: ActionsType): IGameContext
                     isRejoin: false,
                     show: true
                 },
-                players: [...state.players, newPlayer]
+                players: [...state.players, action.payload.newPlayer]
             }
         case GAME_JOINED:
-            const newPlayerName = action.payload[action.payload.length - 1].name
             return {
                 ...state,
                 message: {
-                    copy: `${newPlayerName} has joined the game`,
+                    copy: `${action.payload.newPlayerName} has joined the game`,
                     color: "green"
                 },
                 showMessage: {
@@ -113,16 +111,13 @@ const reducer = (state: IGameContext["game"], action: ActionsType): IGameContext
                     isRejoin: false
                 },
                 gameLoading: false,
-                players: [...action.payload]
+                players: [...action.payload.updatedPlayers]
             }
         case GAME_REJOINED:
-            const rejoinedPlayerName = (action.payload as (IPlayer & {isRejoin: boolean})[])
-                .find(player => player.isRejoin)
-                ?.name
             return {
                 ...state,
                 message: {
-                    copy: `${rejoinedPlayerName} has rejoined the game`,
+                    copy: `${action.payload.rejoinedPlayerName} has rejoined the game`,
                     color: "green"
                 },
                 showMessage: {
@@ -131,7 +126,7 @@ const reducer = (state: IGameContext["game"], action: ActionsType): IGameContext
                     isRejoin: false
                 },
                 gameLoading: false,
-                players: [...action.payload]
+                players: [...action.payload.updatedPlayers]
             }
         case GAME_STARTED:
             return {
@@ -183,27 +178,17 @@ const reducer = (state: IGameContext["game"], action: ActionsType): IGameContext
                 },
                 players: [...action.payload.newPlayers]
             }
-        case REJOIN_GAME:            
-            const {
-                Player: {
-                    Cards, 
-                    CardDrawn, 
-                    IsTurn,
-                    Name
-                }, 
-                CurrentPlayer,
-                GameStarted
-            } = action.payload            
+        case REJOIN_GAME:                     
             return {
                 ...state,
-                hand: [...Cards],
-                canDraw: !CardDrawn,
-                isTurn: IsTurn,
+                hand: [...action.payload.Player.Cards],
+                canDraw: !action.payload.Player.CardDrawn,
+                isTurn: action.payload.Player.IsTurn,
                 currentPlayer: {
-                    position: CurrentPlayer,
-                    name: state.players[CurrentPlayer].name
+                    position: action.payload.CurrentPlayer,
+                    name: state.players[action.payload.CurrentPlayer].name
                 },
-                isGameStarted: GameStarted
+                isGameStarted: action.payload.GameStarted
             }
         case REJOIN_MESSAGE:
             return {
@@ -223,15 +208,14 @@ const reducer = (state: IGameContext["game"], action: ActionsType): IGameContext
                 ...state,
                 discardSelected: action.payload
             }
-        case SET_CURRENT_PLAYER:
-            const isTurn = state.players[action.payload.position].name === state.playerName
+        case SET_CURRENT_PLAYER:            
             return {
                 ...state,
-                isTurn,
-                canDraw: isTurn,
+                isTurn: action.payload.isTurn,
+                canDraw: action.payload.isTurn,
                 currentPlayer: {
-                    position: action.payload.position,
-                    name: action.payload.name
+                    position: action.payload.currentPlayer.position,
+                    name: action.payload.currentPlayer.name
                 }
             }
         case SET_WILL_DISCARD:

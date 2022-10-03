@@ -7,6 +7,7 @@ import {
 import Layout from "./layout"
 import { 
     Hand, 
+    IPlayer, 
     LoadingSpinner,
     PlayerContainer 
 } from "@components"
@@ -69,8 +70,11 @@ const Game: NextPage = () => {
         if(host) {
             setHost(false)
             setCurrentPlayer({
-                position: 0,
-                name: playerName
+                currentPlayer: {
+                    position: 0,
+                    name: playerName
+                },
+                isTurn: true
             })
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -135,7 +139,7 @@ const Game: NextPage = () => {
                     console.log("Event not handled")
             }
         } catch(e) {            
-            console.log(ev)
+            console.log(e)
         }
     }
     
@@ -154,16 +158,30 @@ const Game: NextPage = () => {
     }
 
     const onGameCreated = (data: string) => {
-        gameCreated({password: JSON.parse(data).Id, name: playerName})
+        const {Id: password} = JSON.parse(data)
+        const newPlayer: IPlayer = {
+            name: playerName,
+            points: 0,
+            position: players.length
+        } 
+        localStorage.setItem("p10Pass", password)
+        gameCreated({password, newPlayer})
         setHost(true)
     } 
     
     const onGameJoined = (data: string) => {
-        gameJoined(JSON.parse(data))
+        const updatedPlayers = JSON.parse(data)
+        const newPlayerName = updatedPlayers[updatedPlayers.length - 1].name
+        gameJoined({updatedPlayers, newPlayerName})
     }
 
     const onGameRejoined = (data: string) => {
-        gameRejoined(JSON.parse(data))
+        const updatedPlayers = JSON.parse(data)
+        const rejoinedPlayer = (updatedPlayers as (IPlayer & {isRejoin: boolean})[])
+            .find(player => player.isRejoin)
+        if(!rejoinedPlayer) return;
+        const rejoinedPlayerName = rejoinedPlayer.name
+        gameRejoined({updatedPlayers, rejoinedPlayerName})
     }
 
     const onGameStarted = (data: string) => {
@@ -176,10 +194,14 @@ const Game: NextPage = () => {
     }
     
     const onNextPlayerSet = (data: string) => {        
-        const nextPlayer = JSON.parse(data) 
+        const nextPlayer = JSON.parse(data)        
+        const isTurn = players[nextPlayer.CurrentPlayer].name === playerName
         setCurrentPlayer({
-            position: nextPlayer.CurrentPlayer,
-            name: nextPlayer.Player.Name
+            currentPlayer: {
+                position: nextPlayer.CurrentPlayer,
+                name: nextPlayer.Player.Name
+            },
+            isTurn
         })
     }
     
