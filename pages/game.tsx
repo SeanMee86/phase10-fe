@@ -28,9 +28,11 @@ const Game: NextPage = () => {
         drawCard,
         gameCreated,
         gameJoined,
+        gameRejoined,
         gameStarted,
         inProgressError,
         playerDisconnect,
+        rejoinGame,
         setCurrentPlayer,
     } = useContext(GameContext)
 
@@ -66,7 +68,10 @@ const Game: NextPage = () => {
         if(!isGameStarted) return;
         if(host) {
             setHost(false)
-            setCurrentPlayer(0)
+            setCurrentPlayer({
+                position: 0,
+                name: playerName
+            })
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isGameStarted])
@@ -102,6 +107,9 @@ const Game: NextPage = () => {
                 case "GAME_JOINED":
                     onGameJoined(data)
                     break;
+                case "GAME_REJOINED":
+                    onGameRejoined(data)
+                    break;
                 case "GAME_STARTED":
                     onGameStarted(data)
                     break;
@@ -121,7 +129,7 @@ const Game: NextPage = () => {
                     onPlayerDisconnect(data)
                     break;
                 case "REJOINED_GAME":
-                    console.log(data);
+                    onRejoinGame(data)
                     break;
                 default:
                     console.log("Event not handled")
@@ -154,6 +162,10 @@ const Game: NextPage = () => {
         gameJoined(JSON.parse(data))
     }
 
+    const onGameRejoined = (data: string) => {
+        gameRejoined(JSON.parse(data))
+    }
+
     const onGameStarted = (data: string) => {
         gameStarted(JSON.parse(data))
     }
@@ -163,9 +175,12 @@ const Game: NextPage = () => {
         displayInvalidErr()
     }
     
-    const onNextPlayerSet = (data: string) => {
-        const position = +JSON.parse(data) 
-        setCurrentPlayer(position)
+    const onNextPlayerSet = (data: string) => {        
+        const nextPlayer = JSON.parse(data) 
+        setCurrentPlayer({
+            position: nextPlayer.CurrentPlayer,
+            name: nextPlayer.Player.Name
+        })
     }
     
     const onInProgressError = (data: string) => {
@@ -185,6 +200,10 @@ const Game: NextPage = () => {
             newPlayers,
             lostPlayer: lostPlayer!.name
         })
+    }
+
+    const onRejoinGame = (data: string) => {
+        rejoinGame(JSON.parse(data))
     }
 
     // ****************** SOCKET EVENTS **********************

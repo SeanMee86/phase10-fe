@@ -10,7 +10,10 @@ export interface ICard {
 export type GameType = {
     canDraw: boolean;
     createGame: boolean;
-    currentPlayer: number;
+    currentPlayer: {
+        position: number;
+        name: string;
+    };
     discardSelected: number | null;
     gameLoading: boolean;
     gamePassword?: string;
@@ -42,6 +45,7 @@ export interface IGameContext {
     drawCard(hand: ICard[]): void;
     gameCreated(payload: {password: string; name: string}): void;
     gameJoined(payload: IPlayer[]): void;
+    gameRejoined(payload: IPlayer[]): void;
     gameStarted(hand: ICard[]): void;
     inProgressError(error: string): void;
     noDiscardSelectedMsg(): void;
@@ -52,7 +56,7 @@ export interface IGameContext {
     rejoinGame(game: GameType): void;
     rejoinMessage(): void;
     selectDiscard(card: number): void;
-    setCurrentPlayer(currentPlayer: number): void;
+    setCurrentPlayer(currentPlayer: GameType["currentPlayer"]): void;
     setWillDiscard(willDiscard: boolean): void;
     submitForm(payload: {
         createGame: boolean;

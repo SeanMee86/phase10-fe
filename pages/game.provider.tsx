@@ -24,7 +24,8 @@ import {
     SET_CURRENT_PLAYER,
     REJOIN_GAME,
     REJOIN_MESSAGE,
-    PLAYER_DISCONNECT
+    PLAYER_DISCONNECT,
+    GAME_REJOINED
 } from "./game.actions"
 import { IPlayer } from "./components";
 
@@ -33,7 +34,10 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
     const initialState: GameType = {
         canDraw: false,
         createGame: false,
-        currentPlayer: 0,
+        currentPlayer: {
+            position: 0,
+            name: ""
+        },
         discardSelected: null,
         gameLoading: false,
         gamePassword: "",
@@ -89,6 +93,10 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
     const gameJoined = (payload: IPlayer[]) => {
         dispatch({type: GAME_JOINED, payload})   
     }
+
+    const gameRejoined = (payload: IPlayer[]) => {
+        dispatch({type: GAME_REJOINED, payload})
+    }
     
     const gameStarted = (hand: ICard[]) => {
         dispatch({type: GAME_STARTED, payload: hand})
@@ -118,7 +126,7 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
         dispatch({type: SELECT_DISCARD, payload: cardIdx})
     }
 
-    const setCurrentPlayer = (payload: number) => {
+    const setCurrentPlayer = (payload: GameType["currentPlayer"]) => {
         dispatch({type: SET_CURRENT_PLAYER, payload})
     }
 
@@ -147,6 +155,7 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
         drawCard,
         gameCreated,
         gameJoined,
+        gameRejoined,
         gameStarted,
         inProgressError,
         noDiscardSelectedMsg,
