@@ -186,7 +186,7 @@ const reducer = (state: IGameContext["game"], action: ActionsType): IGameContext
                 isTurn: action.payload.Player.IsTurn,
                 currentPlayer: {
                     position: action.payload.CurrentPlayer,
-                    name: state.players[action.payload.CurrentPlayer].name
+                    name: action.payload.CurrentPlayerName
                 },
                 isGameStarted: action.payload.GameStarted
             }
