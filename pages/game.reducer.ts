@@ -178,15 +178,15 @@ const reducer = (state: IGameContext["game"], action: ActionsType): IGameContext
                 },
                 players: [...action.payload.newPlayers]
             }
-        case REJOIN_GAME:                     
+        case REJOIN_GAME:
             return {
                 ...state,
                 hand: [...action.payload.Player.Cards],
                 canDraw: !action.payload.Player.CardDrawn,
                 isTurn: action.payload.Player.IsTurn,
                 currentPlayer: {
-                    position: action.payload.CurrentPlayer,
-                    name: action.payload.CurrentPlayerName
+                    position: action.payload.CurrentPlayer.Position,
+                    name: action.payload.CurrentPlayer.Name
                 },
                 isGameStarted: action.payload.GameStarted
             }

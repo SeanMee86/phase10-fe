@@ -194,12 +194,12 @@ const Game: NextPage = () => {
     }
     
     const onNextPlayerSet = (data: string) => {        
-        const nextPlayer = JSON.parse(data)        
-        const isTurn = players[nextPlayer.CurrentPlayer].name === playerName
+        const nextPlayer = JSON.parse(data)
+        const isTurn = players[nextPlayer.CurrentPlayer.Position]?.name === playerName
         setCurrentPlayer({
             currentPlayer: {
-                position: nextPlayer.CurrentPlayer,
-                name: nextPlayer.Player.Name
+                position: nextPlayer.CurrentPlayer.Position,
+                name: nextPlayer.CurrentPlayer.Name
             },
             isTurn
         })
@@ -225,7 +225,12 @@ const Game: NextPage = () => {
     }
 
     const onRejoinGame = (data: string) => {
-        rejoinGame(JSON.parse(data))
+        const [ClientData, Player] = JSON.parse(data)
+        const rejoinData = {
+            ...ClientData,
+            Player
+        }
+        rejoinGame(rejoinData)
     }
 
     // ****************** SOCKET EVENTS **********************
