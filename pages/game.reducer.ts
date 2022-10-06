@@ -208,9 +208,7 @@ const reducer = (state: IGameContext["game"], action: ActionsType): IGameContext
                 ...state,
                 discardSelected: action.payload
             }
-        case SET_CURRENT_PLAYER:
-            console.log(action.payload);
-                   
+        case SET_CURRENT_PLAYER:                   
             return {
                 ...state,
                 isTurn: action.payload.isTurn,
