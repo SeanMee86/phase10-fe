@@ -176,7 +176,7 @@ const reducer = (state: IGameContext["game"], action: ActionsType): IGameContext
                     timer: 3,
                     isRejoin: false
                 },
-                players: [...action.payload.newPlayers]
+                players: [...action.payload.updatedPlayers]
             }
         case REJOIN_GAME:
             return {
@@ -208,7 +208,9 @@ const reducer = (state: IGameContext["game"], action: ActionsType): IGameContext
                 ...state,
                 discardSelected: action.payload
             }
-        case SET_CURRENT_PLAYER:            
+        case SET_CURRENT_PLAYER:
+            console.log(action.payload);
+                   
             return {
                 ...state,
                 isTurn: action.payload.isTurn,

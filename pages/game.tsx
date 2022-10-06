@@ -195,7 +195,7 @@ const Game: NextPage = () => {
     
     const onNextPlayerSet = (data: string) => {        
         const { CurrentPlayer: { Name, Position } } = JSON.parse(data)
-        const isTurn = players[Position]?.name === playerName
+        const isTurn = Name === playerName
         setCurrentPlayer({
             currentPlayer: {
                 position: Position,
