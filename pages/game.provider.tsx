@@ -21,7 +21,11 @@ import {
     DISCARD_CARD,
     ARRANGE_HAND,
     DISPLAY_INVALID_ERR,
-    SET_CURRENT_PLAYER
+    SET_CURRENT_PLAYER,
+    REJOIN_GAME,
+    REJOIN_MESSAGE,
+    PLAYER_DISCONNECT,
+    GAME_REJOINED
 } from "./game.actions"
 import { IPlayer } from "./components";
 
@@ -30,12 +34,16 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
     const initialState: GameType = {
         canDraw: false,
         createGame: false,
-        currentPlayer: 0,
+        currentPlayer: {
+            position: 0,
+            name: ""
+        },
         discardSelected: null,
         gameLoading: false,
         gamePassword: "",
         hand: [],
         isGameStarted: false,
+        isRejoin: false,
         isTurn: false,
         message: {
             color: "green",
@@ -45,7 +53,8 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
         players: [],
         showMessage: {
             show: false,
-            timer: null
+            timer: null,
+            isRejoin: false
         },
         willDiscard: false
     }
@@ -76,12 +85,22 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
         dispatch({type: DRAW_CARD, payload: hand})
     }
 
-    const gameCreated = (payload: {password: string; name: string;}) => {
+    const gameCreated = (payload: {password: string; newPlayer: IPlayer;}) => {
         dispatch({type: GAME_CREATED, payload})
     }
 
-    const gameJoined = (payload: IPlayer[]) => {
+    const gameJoined = (payload: {
+        updatedPlayers: IPlayer[],
+        newPlayerName: string
+    }) => {
         dispatch({type: GAME_JOINED, payload})   
+    }
+
+    const gameRejoined = (payload: {
+        updatedPlayers: IPlayer[],
+        rejoinedPlayerName: string
+    }) => {
+        dispatch({type: GAME_REJOINED, payload})
     }
     
     const gameStarted = (hand: ICard[]) => {
@@ -96,11 +115,26 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
         dispatch({type: NO_DISCARD_SELECTED_MSG})
     }
 
+    const playerDisconnect = (payload: {updatedPlayers: IPlayer[], lostPlayer: string}) => {
+        dispatch({type: PLAYER_DISCONNECT, payload})
+    }
+
+    const rejoinGame = (payload: GameType) => {
+        dispatch({type: REJOIN_GAME, payload})
+    }
+
+    const rejoinMessage = () => {
+        dispatch({type: REJOIN_MESSAGE})
+    }
+
     const selectDiscard = (cardIdx: number) => {
         dispatch({type: SELECT_DISCARD, payload: cardIdx})
     }
 
-    const setCurrentPlayer = (payload: number) => {
+    const setCurrentPlayer = (payload: {
+        currentPlayer: GameType["currentPlayer"],
+        isTurn: boolean
+    }) => {
         dispatch({type: SET_CURRENT_PLAYER, payload})
     }
 
@@ -112,6 +146,7 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
         createGame: boolean;
         gamePassword: string;
         playerName: string;
+        isRejoin?: boolean;
     }) => {
         dispatch({type: SUBMIT_FORM, payload})
     }
@@ -126,9 +161,13 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
         drawCard,
         gameCreated,
         gameJoined,
+        gameRejoined,
         gameStarted,
         inProgressError,
         noDiscardSelectedMsg,
+        playerDisconnect,
+        rejoinGame,
+        rejoinMessage,
         selectDiscard,
         setCurrentPlayer,
         setWillDiscard,

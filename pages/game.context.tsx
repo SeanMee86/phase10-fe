@@ -10,20 +10,28 @@ export interface ICard {
 export type GameType = {
     canDraw: boolean;
     createGame: boolean;
-    currentPlayer: number;
+    currentPlayer: {
+        position: number;
+        name: string;
+    };
     discardSelected: number | null;
     gameLoading: boolean;
     gamePassword?: string;
     players: IPlayer[];
     hand: ICard[];
     isGameStarted: boolean;
+    isRejoin: boolean;
     isTurn: boolean;
     message: {
         copy: string,
         color: "green" | "red"
     };
     playerName: string;
-    showMessage: {show: boolean; timer: number | null};
+    showMessage: {
+        show: boolean; 
+        timer: number | null;
+        isRejoin: boolean;
+    };
     willDiscard: boolean
 }
 
@@ -35,18 +43,35 @@ export interface IGameContext {
     discardCard(hand: ICard[]): void;
     displayInvalidErr(): void;
     drawCard(hand: ICard[]): void;
-    gameCreated(payload: {password: string; name: string}): void;
-    gameJoined(payload: IPlayer[]): void;
+    gameCreated(payload: {password: string; newPlayer: IPlayer}): void;
+    gameJoined(payload: {
+        updatedPlayers: IPlayer[];
+        newPlayerName: string
+    }): void;
+    gameRejoined(payload: {
+        updatedPlayers: IPlayer[],
+        rejoinedPlayerName: string
+    }): void;
     gameStarted(hand: ICard[]): void;
     inProgressError(error: string): void;
     noDiscardSelectedMsg(): void;
+    playerDisconnect(payload: {
+        updatedPlayers: IPlayer[],
+        lostPlayer: string
+    }): void;
+    rejoinGame(game: GameType): void;
+    rejoinMessage(): void;
     selectDiscard(card: number): void;
-    setCurrentPlayer(currentPlayer: number): void;
+    setCurrentPlayer(payload: {
+        currentPlayer: GameType["currentPlayer"],
+        isTurn: boolean
+    }): void;
     setWillDiscard(willDiscard: boolean): void;
     submitForm(payload: {
         createGame: boolean;
         playerName: string;
         gamePassword: string;
+        isRejoin?: boolean;
     }): void;
 }
 

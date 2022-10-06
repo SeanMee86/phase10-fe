@@ -7,6 +7,7 @@ import {
 import Layout from "./layout"
 import { 
     Hand, 
+    IPlayer, 
     LoadingSpinner,
     PlayerContainer 
 } from "@components"
@@ -28,14 +29,18 @@ const Game: NextPage = () => {
         drawCard,
         gameCreated,
         gameJoined,
+        gameRejoined,
         gameStarted,
         inProgressError,
+        playerDisconnect,
+        rejoinGame,
         setCurrentPlayer,
     } = useContext(GameContext)
 
     const {
         hand,
         createGame, 
+        isRejoin,
         playerName, 
         gamePassword,
         gameLoading,
@@ -64,7 +69,13 @@ const Game: NextPage = () => {
         if(!isGameStarted) return;
         if(host) {
             setHost(false)
-            setCurrentPlayer(0)
+            setCurrentPlayer({
+                currentPlayer: {
+                    position: 0,
+                    name: playerName
+                },
+                isTurn: true
+            })
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isGameStarted])
@@ -100,6 +111,9 @@ const Game: NextPage = () => {
                 case "GAME_JOINED":
                     onGameJoined(data)
                     break;
+                case "GAME_REJOINED":
+                    onGameRejoined(data)
+                    break;
                 case "GAME_STARTED":
                     onGameStarted(data)
                     break;
@@ -115,11 +129,17 @@ const Game: NextPage = () => {
                 case "NEXT_PLAYER_SET":
                     onNextPlayerSet(data)
                     break;
+                case "PLAYER_DISCONNECT":
+                    onPlayerDisconnect(data)
+                    break;
+                case "REJOINED_GAME":
+                    onRejoinGame(data)
+                    break;
                 default:
                     console.log("Event not handled")
             }
         } catch(e) {            
-            console.log(ev)
+            console.log(e)
         }
     }
     
@@ -138,14 +158,30 @@ const Game: NextPage = () => {
     }
 
     const onGameCreated = (data: string) => {
-        gameCreated({password: JSON.parse(data).Id, name: playerName})
+        const {Id: password} = JSON.parse(data)
+        const newPlayer: IPlayer = {
+            name: playerName,
+            points: 0,
+            position: players.length
+        } 
+        localStorage.setItem("p10Pass", password)
+        gameCreated({password, newPlayer})
         setHost(true)
     } 
     
     const onGameJoined = (data: string) => {
-        const playerArray = JSON.parse(data)
-        .map((player: string, index: number) => ({name: player, points: 0, position: index}))
-        gameJoined(playerArray)
+        const updatedPlayers = JSON.parse(data)
+        const newPlayerName = updatedPlayers[updatedPlayers.length - 1].name
+        gameJoined({updatedPlayers, newPlayerName})
+    }
+
+    const onGameRejoined = (data: string) => {
+        const updatedPlayers = JSON.parse(data)
+        const rejoinedPlayer = (updatedPlayers as (IPlayer & {isRejoin: boolean})[])
+            .find(player => player.isRejoin)
+        if(!rejoinedPlayer) return;
+        const rejoinedPlayerName = rejoinedPlayer.name
+        gameRejoined({updatedPlayers, rejoinedPlayerName})
     }
 
     const onGameStarted = (data: string) => {
@@ -157,14 +193,44 @@ const Game: NextPage = () => {
         displayInvalidErr()
     }
     
-    const onNextPlayerSet = (data: string) => {
-        const position = +JSON.parse(data) 
-        setCurrentPlayer(position)
+    const onNextPlayerSet = (data: string) => {        
+        const { CurrentPlayer: { Name, Position } } = JSON.parse(data)
+        const isTurn = Name === playerName
+        setCurrentPlayer({
+            currentPlayer: {
+                position: Position,
+                name: Name
+            },
+            isTurn
+        })
     }
     
     const onInProgressError = (data: string) => {
         inProgressError(JSON.parse(data).error)
         router.push("/")
+    }
+
+    const onPlayerDisconnect = (data: string) => {
+        const playersData = JSON.parse(data)
+        const lostPlayer = players.find(player => {
+            return !playersData.includes(player.name)
+        })
+        const updatedPlayers = players.filter(player => {
+            return player.name !== lostPlayer?.name
+        }) 
+        playerDisconnect({
+            updatedPlayers,
+            lostPlayer: lostPlayer!.name
+        })
+    }
+
+    const onRejoinGame = (data: string) => {
+        const [ClientData, Player] = JSON.parse(data)
+        const rejoinData = {
+            ...ClientData,
+            Player
+        }
+        rejoinGame(rejoinData)
     }
 
     // ****************** SOCKET EVENTS **********************
@@ -208,7 +274,8 @@ const Game: NextPage = () => {
         const event = "JOIN_GAME"
         const data = JSON.stringify({
             name: playerName, 
-            gameId: gamePassword
+            gameId: gamePassword,
+            isRejoin
         })
         socket?.send(JSON.stringify({event, data}))
     }

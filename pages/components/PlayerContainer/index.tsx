@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useContext } from 'react';
 import { GameContext } from 'pages/game.context';
 import styles from "@styles/PlayerContainer.module.css"
-import { PenguinSprite } from '@components';
+import { FireballSprite } from '@components';
 
 interface IPlayerContainerProps {
     players?: IPlayer[];
@@ -50,22 +50,21 @@ const PlayerContainer: React.FunctionComponent<IPlayerContainerProps> = ({player
         right: "10px"
     }
 
-    const isCurrentPlayer = (i: number): boolean => {
-        return game.currentPlayer === i
+    const isCurrentPlayer = (pName: string): boolean => {
+        return game.currentPlayer.name === pName
     }
 
     return (
         <div className={styles.outerContainer}>
             {players && players.map((player, i) => (
-                <div>
+                <div key={player.name}>
                     <div 
-                        key={player.name} 
-                        style={isCurrentPlayer(i) ? currentPlayerStyle : undefined} 
+                        style={isCurrentPlayer(player.name) ? currentPlayerStyle : undefined} 
                         className={styles.innerContainer}>
                         <p>Player: {player.name}</p>
                         <p>Points: {player.points}</p>
-                        {isCurrentPlayer(i) && <div style={spriteStyle}>
-                            <PenguinSprite />
+                        {isCurrentPlayer(player.name) && <div style={spriteStyle}>
+                            <FireballSprite />
                         </div>}
                     </div>
                 </div>

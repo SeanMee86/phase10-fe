@@ -9,15 +9,27 @@
     left: 50%;
     transform: translateX(-50%);
     background-color: white;
+    z-index: 1;
 }
 
-.container button {
+ .closeButton {
     position: absolute;
     top: 5px;
     right: 5px;
     border-radius: 20px;
     border: none;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+.rejoinBtns {
+    display: flex;
+    margin-top: 10px;
+    justify-content: space-around;
+}
+
+.rejoinBtns button {
+    min-width: 200px;
+    padding: 10px 20px;
 }
 
 .copy {
