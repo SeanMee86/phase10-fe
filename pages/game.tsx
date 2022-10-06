@@ -194,12 +194,12 @@ const Game: NextPage = () => {
     }
     
     const onNextPlayerSet = (data: string) => {        
-        const nextPlayer = JSON.parse(data)
-        const isTurn = players[nextPlayer.CurrentPlayer.Position]?.name === playerName
+        const { CurrentPlayer: { Name, Position } } = JSON.parse(data)
+        const isTurn = players[Position]?.name === playerName
         setCurrentPlayer({
             currentPlayer: {
-                position: nextPlayer.CurrentPlayer.Position,
-                name: nextPlayer.CurrentPlayer.Name
+                position: Position,
+                name: Name
             },
             isTurn
         })
@@ -211,15 +211,15 @@ const Game: NextPage = () => {
     }
 
     const onPlayerDisconnect = (data: string) => {
-        const updatedPlayers = JSON.parse(data)
+        const playersData = JSON.parse(data)
         const lostPlayer = players.find(player => {
-            return !updatedPlayers.includes(player.name)
+            return !playersData.includes(player.name)
         })
-        const newPlayers = players.filter(player => {
+        const updatedPlayers = players.filter(player => {
             return player.name !== lostPlayer?.name
         }) 
         playerDisconnect({
-            newPlayers,
+            updatedPlayers,
             lostPlayer: lostPlayer!.name
         })
     }

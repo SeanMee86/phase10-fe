@@ -56,7 +56,7 @@ export interface IGameContext {
     inProgressError(error: string): void;
     noDiscardSelectedMsg(): void;
     playerDisconnect(payload: {
-        newPlayers: IPlayer[],
+        updatedPlayers: IPlayer[],
         lostPlayer: string
     }): void;
     rejoinGame(game: GameType): void;

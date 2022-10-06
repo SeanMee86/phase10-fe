@@ -115,7 +115,7 @@ const GameProvider: React.FC<{children: ReactNode}> = (props) => {
         dispatch({type: NO_DISCARD_SELECTED_MSG})
     }
 
-    const playerDisconnect = (payload: {newPlayers: IPlayer[], lostPlayer: string}) => {
+    const playerDisconnect = (payload: {updatedPlayers: IPlayer[], lostPlayer: string}) => {
         dispatch({type: PLAYER_DISCONNECT, payload})
     }
 
