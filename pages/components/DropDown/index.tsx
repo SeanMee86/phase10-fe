@@ -60,7 +60,7 @@ const DropDown: React.FunctionComponent = () => {
         <button onClick={onDeclineHandler}>No</button>
     )
 
-    const topHide = "-110px",
+    const topHide = "-150px",
           topShow = "60px"
 
     const [topStyle, setTopStyle] = useState(topHide)

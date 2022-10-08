@@ -13,7 +13,7 @@ interface IDraggableProps {
 }
 
 const DraggableCard: React.FunctionComponent<IDraggableProps> = ({id, card, onMoveItem, position, onDropItem}) => {
-  const ref = useRef(null);
+  const ref = useRef<any>();
   
   const [{ isDragging }, connectDrag] = useDrag({
       type: "CARD",

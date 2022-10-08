@@ -1,18 +1,16 @@
 .card {
-    width: 220px;
-    height: 330px;
+    max-width: 220px;
+    width: 90%;
     padding: 8px;
     border: 1px solid rgba(99, 99, 99, 0.4);
     border-radius: 4px;
-    margin-bottom: 30px;
-    margin-left: 20px;
     box-sizing: border-box;
 }
 
 .cardDecor {
     color: white;
-    height: 70px;
-    width: 70px;
+    height: 22%;
+    width: 33%;
     position: absolute;
 }
 
