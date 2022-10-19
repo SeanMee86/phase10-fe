@@ -8,6 +8,7 @@ interface IPlayerContainerProps {
     players?: IPlayer[];
     drawCard(): void;
     discardCard(): void;
+    startButton: false | JSX.Element
 }
 
 export interface IPlayer {
@@ -16,7 +17,7 @@ export interface IPlayer {
     position: number;
 }
 
-const PlayerContainer: React.FunctionComponent<IPlayerContainerProps> = ({players, drawCard, discardCard}) => {
+const PlayerContainer: React.FunctionComponent<IPlayerContainerProps> = ({players, drawCard, discardCard, startButton}) => {
     const { game, noDiscardSelectedMsg,setWillDiscard } = useContext(GameContext)
 
     const initDiscard = () => {
@@ -58,7 +59,7 @@ const PlayerContainer: React.FunctionComponent<IPlayerContainerProps> = ({player
         <div className={styles.outerContainer}>
             {players && players.map((player) => (
                 <div key={`${player.name}-${Date.now()}`}>
-                    <div 
+                    <div
                         style={isCurrentPlayer(player.name) ? currentPlayerStyle : undefined} 
                         className={styles.innerContainer}>
                         <p>Player: {player.name}</p>
@@ -66,23 +67,24 @@ const PlayerContainer: React.FunctionComponent<IPlayerContainerProps> = ({player
                         {isCurrentPlayer(player.name) && <div style={spriteStyle}>
                             <FireballSprite />
                         </div>}
+                        {startButton}
+                        {showDrawBtn && <div className={styles.btnContainer}>
+                            <button onClick={drawCard}>Draw Card</button>
+                        </div>}
+                        {showDiscardBtn && <div className={discardStyles}>
+                            <button onClick={initDiscard}>Discard</button>
+                        </div>}
+                        {showUndoDiscardBtn && <>
+                            <div className={goBackStyles}>
+                                <button onClick={undoDiscard}>&larr; Go Back</button>
+                            </div>
+                            <div className={discardStyles}>
+                                <button onClick={confirmDiscard}>Confirm Discard</button>
+                            </div>
+                        </>}
                     </div>
                 </div>
             ))}
-            {showDrawBtn && <div className={styles.btnContainer}>
-                <button onClick={drawCard}>Draw Card</button>
-            </div>}
-            {showDiscardBtn && <div className={discardStyles}>
-                <button onClick={initDiscard}>Discard</button>
-            </div>}
-            {showUndoDiscardBtn && <>
-                <div className={goBackStyles}>
-                    <button onClick={undoDiscard}>&larr; Go Back</button>
-                </div>
-                <div className={discardStyles}>
-                    <button onClick={confirmDiscard}>Confirm Discard</button>
-                </div>
-            </>}
         </div>
     )
 };

@@ -55,3 +55,55 @@
     position: relative;
     overflow: hidden;
 }
+
+@media screen and (max-width: 500px) {
+    
+    .upperLeft p {
+        top: 5px;
+        left: 0;
+    }
+    
+    .bottomRight p {
+        bottom: 5px;
+        right: 0;
+    }
+    
+    .cardDecor p {
+        font-size: 1.4rem;
+    }
+
+    .card {
+        max-width: 150px;
+    }
+
+    .card .inner {
+        font-size: 2rem;
+    }
+
+}
+
+@media screen and (max-width: 360px) {
+    
+    .upperLeft p {
+        top: 7px;
+        left: 0;
+    }
+    
+    .bottomRight p {
+        bottom: 7px;
+        right: 0;
+    }
+    
+    .cardDecor p {
+        font-size: 1rem;
+    }
+
+    .card {
+        max-width: 150px;
+    }
+
+    .card .inner {
+        font-size: 2rem;
+    }
+
+}

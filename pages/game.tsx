@@ -289,13 +289,13 @@ const Game: NextPage = () => {
     }
 
     return (
-        <Layout>
+        <>
             {gameLoading ? 
                 <LoadingSpinner/> : 
                 <>
-                    {host && <button onClick={startGameHandler}>Start Game</button>}
                     <div className={styles.gameBoard}>
                         <PlayerContainer 
+                            startButton={host && <button onClick={startGameHandler}>Start Game</button>}
                             drawCard={drawCardHandler} 
                             discardCard={discardHandler}
                             players={players}/>
@@ -305,7 +305,7 @@ const Game: NextPage = () => {
                     </div>
                 </>
             }
-        </Layout>
+        </>
     )
 }
 

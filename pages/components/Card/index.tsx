@@ -51,7 +51,7 @@ const Card: React.FunctionComponent<ICardProps> = ({number, color, position, for
         <div 
             ref={forwardedRef}
             className={styles.card} 
-            style={{color, ...(forwardedStyle), ...(discardStyle), zIndex: position, height: cardHeight}}
+            style={{color, ...(forwardedStyle), ...(discardStyle), height: cardHeight}}
             onClick={game.willDiscard ? onSelectDiscard : onSelect}>
             <div className={styles.inner}>
                 <div
